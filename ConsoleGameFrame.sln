@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameTest", "NewFrameTest\FrameTest.csproj", "{8DFAE243-874B-4D98-A520-6B16C8D2FA38}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameFrame", "NewGameFrame\GameFrame.csproj", "{32EE32B6-DEFC-4150-B264-5B7AE9051D82}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DFAE243-874B-4D98-A520-6B16C8D2FA38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DFAE243-874B-4D98-A520-6B16C8D2FA38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DFAE243-874B-4D98-A520-6B16C8D2FA38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DFAE243-874B-4D98-A520-6B16C8D2FA38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32EE32B6-DEFC-4150-B264-5B7AE9051D82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32EE32B6-DEFC-4150-B264-5B7AE9051D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32EE32B6-DEFC-4150-B264-5B7AE9051D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32EE32B6-DEFC-4150-B264-5B7AE9051D82}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22883A5B-5F4D-4EA4-9625-79D552E72337}
+	EndGlobalSection
+EndGlobal
