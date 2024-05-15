@@ -4,12 +4,15 @@ using System.Runtime.InteropServices;
 
 namespace GameFrame.Core
 {
-    public class GameObject
+    /// <summary>
+    /// 游戏中的基本单元
+    /// </summary>
+    public class GameObject : Object
     {
         /// <summary>
         /// 游戏物体所属的场景
         /// </summary>
-        public Scene OwnerScene { get; set; }
+        public Scene OwnerScene { get; }
 
         /// <summary>
         /// 游戏物体的名称
@@ -17,67 +20,7 @@ namespace GameFrame.Core
         public string Name { get; set; } = string.Empty;
 
         #region 位置信息
-        private GameObject? _parent;
-        /// <summary>
-        /// 游戏物体的父物体
-        /// </summary>
-        public GameObject? Parent
-        {
-            get => _parent;
-            set
-            {
-                if (_parent?.Parent == this)
-                {
-                    return;
-                }
-
-                if (_parent != value)
-                {
-                    _parent?._child.Remove(this);
-                    value?._child.Add(this);
-                    _parent = value;
-                }
-            }
-        }
-
-        private readonly List<GameObject> _child = new();
-        /// <summary>
-        /// 游戏物体的孩子物体
-        /// </summary>
-        public GameObject[] Children => _child.ToArray();
-
-        private Vector _position = Vector.Zero;
-        /// <summary>
-        /// 游戏物体的位置
-        /// </summary>
-        public Vector Position
-        {
-            get => _position;
-            set
-            {
-                var offset = value - _position;
-
-                if (offset == Vector.Zero)
-                {
-                    return;
-                }
-
-                foreach (var child in Children)
-                {
-                    child.Position += offset;
-                }
-
-                _position = value;
-            }
-        }
-        /// <summary>
-        /// 局部位置
-        /// </summary>
-        public Vector LocalPosition
-        {
-            get => Position - Parent?.Position ?? Vector.Zero;
-            set => Position = value + Parent?.Position ?? Vector.Zero;
-        }
+        public Transform Transform { get; }
         #endregion
 
         #region 构造函数
@@ -85,7 +28,7 @@ namespace GameFrame.Core
         {
 
         }
-        public GameObject(Scene? scene, string name = "")
+        public GameObject(Scene? scene, string name = "", Transform? transform = null)
         {
             if (scene is null)
                 throw new ArgumentNullException(nameof(scene));
@@ -94,6 +37,8 @@ namespace GameFrame.Core
             scene.GameObjects.Add(this);
 
             Name = name;
+
+            Transform = transform ?? new();
         }
         #endregion
 

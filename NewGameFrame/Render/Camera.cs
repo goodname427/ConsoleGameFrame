@@ -54,7 +54,7 @@ namespace GameFrame.Render
                     _renderCache.Resize(Width, Height);
 
                 // 在这里会将场景坐标系转为屏幕坐标系，场景坐标系为（x→,y↑），屏幕坐标系为（x→,y↓）
-                var start = new Vector(Position.X - Width / 2, Position.Y + Height / 2);
+                var start = new Vector(Transform.Position.X - Width / 2, Transform.Position.Y + Height / 2);
                 for (int i = 0; i < Width; i++)
                 {
                     for (int j = 0; j < Height; j++)

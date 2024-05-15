@@ -28,7 +28,7 @@ namespace GameFrame.Render
                     continue;
                 }
 
-                OwnerScene.Map[x + Position.X - image.Pivot.X, y + Position.Y - image.Pivot.Y] = image[x, y];
+                OwnerScene.Map[x + Transform.Position.X - image.Pivot.X, y + Transform.Position.Y - image.Pivot.Y] = image[x, y];
             }
         }
 

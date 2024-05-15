@@ -14,7 +14,7 @@ namespace GameFrame.Physics
         {
             foreach (var vertex in otherCollider.Primitive.Vertexes)
             {
-                if (collider.Primitive.IsInside(vertex + otherCollider.Position - collider.Position))
+                if (collider.Primitive.IsInside(vertex + otherCollider.Transform.Position - collider.Transform.Position))
                 {
                     return true;
                 }
@@ -44,7 +44,7 @@ namespace GameFrame.Physics
         public void AddCollider(Collider newCollider)
         {
             Colliders.Add(newCollider);
-            ColliderPositionCache.Add(newCollider, newCollider.Position);
+            ColliderPositionCache.Add(newCollider, newCollider.Transform.Position);
         }
 
         public void Update()
@@ -64,13 +64,13 @@ namespace GameFrame.Physics
                         b.OnColliderEnter(a);
 
                         // 回退位置
-                        if (a.Position != aPos)
+                        if (a.Transform.Position != aPos)
                         {
-                            a.Position = aPos;
+                            a.Transform.Position = aPos;
                         }
-                        if (b.Position != bPos)
+                        if (b.Transform.Position != bPos)
                         {
-                            b.Position = bPos;
+                            b.Transform.Position = bPos;
                         }
                     }
                 }
@@ -78,9 +78,9 @@ namespace GameFrame.Physics
 
             foreach (var collider in Colliders)
             {
-                if (collider.Position != ColliderPositionCache[collider])
+                if (collider.Transform.Position != ColliderPositionCache[collider])
                 {
-                    ColliderPositionCache[collider] = collider.Position;
+                    ColliderPositionCache[collider] = collider.Transform.Position;
                 }
             }
         }

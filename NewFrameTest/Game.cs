@@ -1,8 +1,8 @@
-﻿using GameFrame.MathCore;
+﻿using GameFrame.Components;
 using GameFrame.Core;
-using GameFrame.Render;
+using GameFrame.Gameplay;
 using GameFrame.Physics;
-using GameFrame.Components;
+using GameFrame.Render;
 using GameFrame.UI;
 
 namespace FrameTest
@@ -10,6 +10,8 @@ namespace FrameTest
     internal class Game : IGame
     {
         public int Step { get; set; }
+
+        public float MinDeltaTime => 0.0083f;
 
         public Scene? GetScene(int sceneIndex)
         {
@@ -23,29 +25,37 @@ namespace FrameTest
                     var r = new Random();
                     for (int i = 0; i < image.Width; i++)
                     {
-                        for (int j =0; j < image.Height; j++)
+                        for (int j = 0; j < image.Height; j++)
                         {
                             image[i, j] = '.';
                         }
                     }
 
-                    _ = new GameObject(scene) { Position = new(0, 0) }.AddComponet<ImageRenderer>().Image = image;
-                    
+                    var background = new GameObject(scene, transform: new(new(0, 0))).AddComponet<ImageRenderer>().Image = image;
+
                     // 墙
-                    var wall = new GameObject(scene, "Wall") { Position = new(3, 5) };
+                    var wall = new GameObject(scene, "Wall", new(new(3, 5)));
                     wall.AddComponet<ImageRenderer>().Image = new('%', 10, 1);
                     wall.AddComponet<BoxCollider>().SetBoxToImage();
 
                     // 玩家
-                    var p = new GameObject(scene, "Player") { Position = new Vector(0, 0, 1) };
-                    p.AddComponet<ImageRenderer>().Image = new(new('#', ConsoleColor.Yellow, ConsoleColor.Red), 3, 3);
+                    var p = new GameObject(scene, "Player", new(new(0, 0, 1)));
+
+                    var pImgea = new Image(new ConsolePixel[,]
+                    {
+                        { '#', '\0', '#', '\0' },
+                        { '\0', '#', '#' , '#'},
+                        { '#', '\0', '#' , '\0'},
+                    });
+
+                    p.AddComponet<ImageRenderer>().Image = pImgea;
                     p.AddComponet<Movement>();
                     p.AddComponet<BoxCollider>().SetBoxToImage().ColliderEnter += (other) => Screen.Instance!.HUD = ($"{p.Name} interact with {other.Name}");
 
-                    scene.FindComponentByType<Camera>()!.GameObject.Parent = p;
+                    scene.FindComponentByType<Camera>()!.GameObject.Transform.Parent = p.Transform;
 
                     var canvas = new GameObject(scene, "Canvas").AddComponet<Canvas>();
-                    
+
                     return scene;
                 default:
                     return null;

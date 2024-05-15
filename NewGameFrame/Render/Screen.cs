@@ -34,6 +34,7 @@ namespace GameFrame.Render
         /// 光标停靠位置
         /// </summary>
         public Vector CursorHoldPosition { get; set; } = new Vector(0, Console.WindowHeight - 1);
+        
         /// <summary>
         /// 提示信息
         /// </summary>
@@ -52,6 +53,15 @@ namespace GameFrame.Render
             Instance = this;
         }
 
+        private static bool SetCursorPosition(int x, int y)
+        {
+            if (x < 0 || y < 0 || x >= Console.WindowWidth || y >= Console.WindowHeight)
+                return false;
+
+            Console.SetCursorPosition(x, y);
+            return true;
+        }
+
         /// <summary>
         /// 设置图像
         /// </summary>
@@ -63,10 +73,9 @@ namespace GameFrame.Render
             var x = (ScreenOrigin.X + i) * 2;
             var y = ScreenOrigin.Y + j;
 
-            if (x < 0 || y < 0 || x >= Console.WindowWidth || y >= Console.WindowHeight)
+            if (!SetCursorPosition(x, y))
                 return;
 
-            Console.SetCursorPosition(x, y);
             Console.ForegroundColor = image.Color;
             Console.BackgroundColor = image.BackColor;
             Console.Write(image.Character is '\0' ? " " : image.Character);
@@ -121,7 +130,7 @@ namespace GameFrame.Render
                 }
             }
 
-            Console.SetCursorPosition(ScreenOrigin.X + CursorHoldPosition.X, ScreenOrigin.Y + CursorHoldPosition.Y);
+            SetCursorPosition(Math.Clamp(ScreenOrigin.X + CursorHoldPosition.X, 0, Console.WindowWidth - 1), Math.Clamp(ScreenOrigin.Y + CursorHoldPosition.Y, 0, Console.WindowHeight - 1));
             Console.Write(HUD);
         }
     }

@@ -1,8 +1,11 @@
 ﻿using GameFrame.MathCore;
 using System.Collections.ObjectModel;
 
-namespace GameFrame.Core
+namespace GameFrame.Gameplay
 {
+    /// <summary>
+    /// 监听控制台输入，并提供一定的入口
+    /// </summary>
     public static class Input
     {
         /// <summary>

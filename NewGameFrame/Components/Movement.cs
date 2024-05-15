@@ -1,4 +1,5 @@
 ﻿using GameFrame.Core;
+using GameFrame.Gameplay;
 
 namespace GameFrame.Components
 {
@@ -11,7 +12,7 @@ namespace GameFrame.Components
 
         public override void Update()
         {
-            Position += Input.GetDirection();
+            Transform.Position += Input.GetDirection();
         }
     }
 }

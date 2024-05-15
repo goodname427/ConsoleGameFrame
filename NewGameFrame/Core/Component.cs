@@ -2,7 +2,10 @@
 
 namespace GameFrame.Core
 {
-    public abstract class Component
+    /// <summary>
+    /// 组件，可以挂载在游戏物体上，赋予游戏物体一定的功能
+    /// </summary>
+    public abstract class Component : Object
     {
         public bool Init = false;
 
@@ -27,11 +30,7 @@ namespace GameFrame.Core
         /// <summary>
         /// 组件所属gameobject位置
         /// </summary>
-        public Vector Position
-        {
-            get => GameObject.Position;
-            set => GameObject.Position = value;
-        }
+        public Transform Transform => GameObject.Transform;
 
         /// <summary>
         /// 是否启用

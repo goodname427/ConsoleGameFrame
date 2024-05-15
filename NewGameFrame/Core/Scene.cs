@@ -1,10 +1,14 @@
-﻿using GameFrame.Physics;
+﻿using GameFrame.Gameplay;
+using GameFrame.Physics;
 using GameFrame.Render;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GameFrame.Core
 {
-    public class Scene
+    /// <summary>
+    /// 游戏实际运行的场景，包含各式各样的组件和游戏物体
+    /// </summary>
+    public class Scene : Object
     {
         /// <summary>
         /// 当前场景
