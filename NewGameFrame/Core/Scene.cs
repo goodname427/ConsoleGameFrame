@@ -36,12 +36,12 @@ namespace GameFrame.Core
         /// <summary>
         /// 场景中所有游戏物体
         /// </summary>
-        public List<GameObject> GameObjects { get; } = new();
+        public List<GameObject> GameObjects { get; } = [];
 
         /// <summary>
         /// 场景中所有组件
         /// </summary>
-        private readonly List<Component>[] Components = { new(), new(), new() };
+        private readonly List<Component>[] Components = [[], [], []];
 
         [SetsRequiredMembers]
         public Scene()

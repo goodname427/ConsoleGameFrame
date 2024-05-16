@@ -10,7 +10,7 @@ namespace GameFrame.Core
     /// <summary>
     /// 代表游戏物体的transform信息
     /// </summary>
-    public class Transform : Object
+    public class Transform(Vector Position) : Object
     {
         private Transform? _parent;
         /// <summary>
@@ -35,13 +35,13 @@ namespace GameFrame.Core
             }
         }
 
-        private readonly List<Transform> _child = new();
+        private readonly List<Transform> _child = [];
         /// <summary>
         /// 游戏物体的孩子物体
         /// </summary>
-        public Transform[] Children => _child.ToArray();
+        public Transform[] Children => [.. _child];
 
-        private Vector _position = Vector.Zero;
+        private Vector _position = Position;
         /// <summary>
         /// 游戏物体的位置
         /// </summary>
@@ -77,11 +77,6 @@ namespace GameFrame.Core
         public Transform() : this(Vector.Zero)
         {
 
-        }
-
-        public Transform(Vector Position)
-        {
-            _position = Position;
         }
     }
 }

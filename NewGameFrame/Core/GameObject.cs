@@ -30,8 +30,7 @@ namespace GameFrame.Core
         }
         public GameObject(Scene? scene, string name = "", Transform? transform = null)
         {
-            if (scene is null)
-                throw new ArgumentNullException(nameof(scene));
+            ArgumentNullException.ThrowIfNull(scene);
 
             OwnerScene = scene;
             scene.GameObjects.Add(this);

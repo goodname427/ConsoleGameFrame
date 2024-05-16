@@ -9,6 +9,7 @@ namespace GameFrame.Render
         /// </summary>
         public ConsolePixel[,] Data { get; private set; }
 
+        #region 图片信息
         /// <summary>
         /// 图片宽度
         /// </summary>
@@ -21,12 +22,13 @@ namespace GameFrame.Render
         /// 图片尺寸
         /// </summary>
         public Vector Size { get; set; } = Vector.Zero;
-
         /// <summary>
         /// 图片锚点，默认为中心点
         /// </summary>
         public Vector Pivot { get; set; }
+        #endregion
 
+        #region 数据访问
         /// <summary>
         /// 遍历图片
         /// </summary>
@@ -43,7 +45,6 @@ namespace GameFrame.Render
                 }
             }
         }
-
         public ConsolePixel this[int x, int y]
         {
             get
@@ -55,7 +56,6 @@ namespace GameFrame.Render
                 Data[x, y] = value;
             }
         }
-
         public ConsolePixel this[Vector position]
         {
             get
@@ -67,9 +67,10 @@ namespace GameFrame.Render
                 Data[position.X, position.Y] = value;
             }
         }
+        #endregion
 
+        #region 构造函数
         public Image() : this(0, 0) { }
-
         public Image(int width, int height)
         {
             Width = width;
@@ -77,7 +78,6 @@ namespace GameFrame.Render
             Pivot = new Vector(Width / 2, Height / 2);
             Data = new ConsolePixel[Width, Height];
         }
-
         public Image(ConsolePixel[,] data)
         {
             Width = data.GetLength(0);
@@ -85,12 +85,10 @@ namespace GameFrame.Render
             Pivot = new Vector(Width / 2, Height / 2);
             Data = data;
         }
-
         public Image(ConsolePixel pixel) : this(1, 1)
         {
             Data[0, 0] = pixel;
         }
-
         public Image(ConsolePixel pixel, int width, int height) : this(width, height)
         {
             for (int y = 0; y < Height; y++)
@@ -101,6 +99,7 @@ namespace GameFrame.Render
                 }
             }
         }
+        #endregion
 
         public void Resize(int newWidth, int newHeight)
         {

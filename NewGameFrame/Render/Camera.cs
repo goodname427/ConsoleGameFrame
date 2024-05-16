@@ -3,7 +3,7 @@ using GameFrame.MathCore;
 
 namespace GameFrame.Render
 {
-    public class Camera : Component
+    public class Camera(GameObject gameObject) : Component(gameObject)
     {
         /// <summary>
         /// 相机宽度
@@ -21,12 +21,7 @@ namespace GameFrame.Render
         /// <summary>
         /// 投影的屏幕
         /// </summary>
-        public Screen? ProjectScreen { get; set; }
-
-        public Camera(GameObject gameObject) : base(gameObject) 
-        {
-            ProjectScreen = Screen.Instance;
-        }
+        public Screen? ProjectScreen { get; set; } = Screen.Instance;
 
         /// <summary>
         /// 后处理通道

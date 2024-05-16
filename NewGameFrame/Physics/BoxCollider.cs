@@ -4,7 +4,7 @@ using GameFrame.Render;
 
 namespace GameFrame.Physics
 {
-    public class BoxCollider : Collider
+    public class BoxCollider(GameObject gameObject) : Collider(gameObject)
     {
         private readonly BoxPrimitive _box = new();
         public Vector Min
@@ -20,10 +20,6 @@ namespace GameFrame.Physics
         }
 
         public override IPrimitive Primitive => _box;
-
-        public BoxCollider(GameObject gameObject) : base(gameObject)
-        {
-        }
 
         /// <summary>
         /// 设置

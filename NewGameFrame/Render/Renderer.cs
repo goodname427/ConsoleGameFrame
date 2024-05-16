@@ -6,14 +6,9 @@ using System.Net;
 
 namespace GameFrame.Render
 {
-    public class Renderer : Component
+    public class Renderer(GameObject gameObject) : Component(gameObject)
     {
         public int RenderLayer;
-
-        public Renderer(GameObject gameObject) : base(gameObject)
-        {
-
-        }
 
         /// <summary>
         /// 绘制图片到地图上

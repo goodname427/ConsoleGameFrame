@@ -37,9 +37,9 @@ namespace GameFrame.Physics
         /// <summary>
         /// 场景中的碰撞体
         /// </summary>
-        public readonly List<Collider> Colliders = new();
+        public readonly List<Collider> Colliders = [];
 
-        private readonly Dictionary<Collider, Vector> ColliderPositionCache = new();
+        private readonly Dictionary<Collider, Vector> ColliderPositionCache = [];
 
         public void AddCollider(Collider newCollider)
         {

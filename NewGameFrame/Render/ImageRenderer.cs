@@ -2,14 +2,9 @@
 
 namespace GameFrame.Render
 {
-    public class ImageRenderer : Renderer
+    public class ImageRenderer(GameObject gameObject) : Renderer(gameObject)
     {
-        public Image? Image { get; set; }
-
-        public ImageRenderer(GameObject gameObject) : base(gameObject)
-        {
-            Image = new Image(0, 0);
-        }
+        public Image? Image { get; set; } = new Image(0, 0);
 
         public override void Render()
         {

@@ -79,7 +79,7 @@ namespace GameFrame.Render
             return position.X >= width || position.Y >= height || position.X < 0 || position.Y < 0;
         }
 
-        private readonly ConsolePixel[][,] _quadrant = new ConsolePixel[][,] { new ConsolePixel[0, 0], new ConsolePixel[0, 0], new ConsolePixel[0, 0], new ConsolePixel[0, 0] };
+        private readonly ConsolePixel[][,] _quadrant = [new ConsolePixel[0, 0], new ConsolePixel[0, 0], new ConsolePixel[0, 0], new ConsolePixel[0, 0]];
 
         public ConsolePixel this[Vector position]
         {

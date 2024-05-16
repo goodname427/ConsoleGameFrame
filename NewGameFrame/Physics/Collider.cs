@@ -3,7 +3,7 @@ using GameFrame.Core;
 
 namespace GameFrame.Physics
 {
-    public abstract class Collider : Component
+    public abstract class Collider(GameObject gameObject) : Component(gameObject)
     {
         public delegate void ColliderEventHandler(Collider other);
 
@@ -12,11 +12,6 @@ namespace GameFrame.Physics
         public event ColliderEventHandler? ColliderSaty;
 
         public abstract IPrimitive Primitive { get;}
-
-        public Collider(GameObject gameObject) : base(gameObject)
-        {
-            
-        }
 
         public sealed override void Start() { }
         public sealed override void Update() { }
