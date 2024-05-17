@@ -1,7 +1,5 @@
 ﻿using GameFrame.Core;
-using GameFrame.Render;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography.X509Certificates;
+using GameFrame.Core.Render;
 
 namespace GameFrame.UI
 {

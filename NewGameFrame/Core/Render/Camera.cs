@@ -1,9 +1,6 @@
-﻿using GameFrame.Core;
-using GameFrame.MathCore;
-
-namespace GameFrame.Render
+﻿namespace GameFrame.Core.Render
 {
-    public class Camera(GameObject gameObject) : Component(gameObject)
+    public class Camera : Component
     {
         /// <summary>
         /// 相机宽度
@@ -23,13 +20,17 @@ namespace GameFrame.Render
         /// </summary>
         public Screen? ProjectScreen { get; set; } = Screen.Instance;
 
+        protected Camera(GameObject gameObject) : base(gameObject)
+        {
+        }
+
+        #region 渲染
         /// <summary>
         /// 后处理通道
         /// </summary>
-        public List<ICameraRenderPass> RenderPasses { get; } = new List<ICameraRenderPass>();
+        public List<ICameraRenderPass> RenderPasses { get; } = [];
 
         private readonly Image _renderCache = new();
-        
         /// <summary>
         /// 获取映射的地图
         /// </summary>
@@ -77,5 +78,6 @@ namespace GameFrame.Render
 
             ProjectScreen.Draw(RenderCache);
         }
+        #endregion
     }
 }

@@ -1,5 +1,5 @@
 ﻿using GameFrame.Core;
-using GameFrame.Render;
+using GameFrame.Core.Render;
 
 namespace GameFrame.Gameplay
 {

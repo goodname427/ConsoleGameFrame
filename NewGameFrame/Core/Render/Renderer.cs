@@ -1,12 +1,6 @@
-﻿using GameFrame.Core;
-using GameFrame.MathCore;
-using System;
-using System.Diagnostics;
-using System.Net;
-
-namespace GameFrame.Render
+﻿namespace GameFrame.Core.Render
 {
-    public class Renderer(GameObject gameObject) : Component(gameObject)
+    public abstract class Renderer(GameObject gameObject) : Component(gameObject)
     {
         public int RenderLayer;
 

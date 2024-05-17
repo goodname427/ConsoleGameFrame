@@ -1,11 +1,4 @@
-﻿using GameFrame.MathCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameFrame.Core
+﻿namespace GameFrame.Core
 {
     /// <summary>
     /// 代表游戏物体的transform信息

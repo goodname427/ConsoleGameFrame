@@ -1,6 +1,5 @@
-﻿using GameFrame.Gameplay;
-using GameFrame.Physics;
-using GameFrame.Render;
+﻿using GameFrame.Core.Physics;
+using GameFrame.Core.Render;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GameFrame.Core
@@ -33,15 +32,18 @@ namespace GameFrame.Core
         /// </summary>
         public required PhysicsSystem PhysicsSystem { get; init; }
 
+        private readonly List<GameObject> _gameObjects = [];
         /// <summary>
         /// 场景中所有游戏物体
         /// </summary>
-        public List<GameObject> GameObjects { get; } = [];
+        public GameObject[] GameObjects => [.. _gameObjects];
 
+        private readonly List<Component>[] _components = [[], [], []];
         /// <summary>
         /// 场景中所有组件
+        /// Renderer, Camera, Others
         /// </summary>
-        private readonly List<Component>[] Components = [[], [], []];
+        private Component[][] Components => _components.Select(list => list.ToArray()).ToArray();
 
         [SetsRequiredMembers]
         public Scene()
@@ -87,6 +89,7 @@ namespace GameFrame.Core
             OnSceneUpdate?.Invoke(this);
         }
 
+        #region 物体管理
         /// <summary>
         /// 组件被添加时调用
         /// </summary>
@@ -102,32 +105,69 @@ namespace GameFrame.Core
                     var _renderer = component as Renderer;
                     if (_renderer?.RenderLayer > renderer.RenderLayer)
                     {
-                        Components[0].Insert(index, renderer);
+                        _components[0].Insert(index, renderer);
                         break;
                     }
 
                     index++;
                 }
 
-                if (index == Components[0].Count)
+                if (index == _components[0].Count)
                 {
-                    Components[0].Add(renderer);
+                    _components[0].Add(renderer);
                 }
             }
             else if (newComponent is Camera camera)
             {
-                Components[1].Add(camera);
+                _components[1].Add(camera);
             }
             else if (newComponent is Collider collider)
             {
                 PhysicsSystem.AddCollider(collider);
+                _components[2].Add(collider);
             }
             else
             {
-                Components[2].Add(newComponent);
+                _components[2].Add(newComponent);
+            }
+        }
+        /// <summary>
+        /// 组件被移除时调用
+        /// </summary>
+        /// <param name="removedComponent"></param>
+        public void OnComponentRemove(Component removedComponent)
+        {
+            if (removedComponent is Renderer)
+            {
+                _components[0].Remove(removedComponent);
+            }
+            else if (removedComponent is Camera)
+            {
+                _components[1].Remove(removedComponent);
+            }
+            else if (removedComponent is Collider collider)
+            {
+                PhysicsSystem.RemoveCollider(collider);
+                _components[2].Remove(collider);
+            }
+            else
+            {
+                _components[2].Remove(removedComponent);
             }
         }
 
+        public void OnGameObjectAdd(GameObject newGameObject)
+        {
+            _gameObjects.Add(newGameObject);
+        }
+
+        public void OnGameObjectRemoved(GameObject removedGameObject)
+        {
+            _gameObjects.Remove(removedGameObject);
+        }
+        #endregion
+
+        #region 寻找物体
         /// <summary>
         /// 寻找场景中的指定游戏物体
         /// </summary>
@@ -165,7 +205,6 @@ namespace GameFrame.Core
             }
             return null;
         }
-
-
+        #endregion
     }
 }

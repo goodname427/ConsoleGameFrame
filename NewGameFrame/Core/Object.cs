@@ -11,6 +11,8 @@ namespace GameFrame.Core
         public Object Clone()
         {
             // todo
+            throw new NotImplementedException();
+            
             var type = GetType();
             
             // 浅拷贝
@@ -37,6 +39,16 @@ namespace GameFrame.Core
         public T Clone<T>() where T : Object
         {
             return Clone() as T ?? throw new InvalidCastException();
+        }
+    
+        public void Destory()
+        {
+            OnDestoryed();
+        }
+
+        protected virtual void OnDestoryed()
+        {
+
         }
     }
 }

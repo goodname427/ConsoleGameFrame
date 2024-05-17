@@ -1,4 +1,4 @@
-﻿namespace GameFrame.MathCore
+﻿namespace GameFrame.Core
 {
     public struct Vector
     {

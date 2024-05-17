@@ -1,7 +1,6 @@
-﻿using GameFrame.MathCore;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
-namespace GameFrame.Gameplay
+namespace GameFrame.Core
 {
     /// <summary>
     /// 监听控制台输入，并提供一定的入口

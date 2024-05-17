@@ -1,7 +1,4 @@
-﻿using GameFrame.MathCore;
-using GameFrame.Render;
-using System.Diagnostics;
-using System.Security.Cryptography;
+﻿using System.Diagnostics;
 
 namespace GameFrame.Core
 {
@@ -11,26 +8,6 @@ namespace GameFrame.Core
     public static class GameManager
     {
         /// <summary>
-        /// 创建一个默认场景，包含一个相机
-        /// </summary>
-        /// <param name="cameraWidth"></param>
-        /// <param name="cameraHeigth"></param>
-        /// <param name="cameraPostionX"></param>
-        /// <param name="cameraPositionY"></param>
-        /// <returns></returns>
-        public static Scene CreatScene(int cameraWidth = 21, int cameraHeigth = 21, int cameraPostionX = 0, int cameraPositionY = 0)
-        {
-            var scene = new Scene();
-
-            var go = new GameObject(scene);
-            go.Transform.Position = new(cameraPostionX, cameraPositionY);
-            var camera = go.AddComponet<Camera>();
-            camera.Size = new Vector(cameraWidth, cameraHeigth);
-            
-            return scene;
-        }
-
-        /// <summary>
         /// 开始游戏
         /// </summary>
         /// <param name="game"></param>
@@ -38,7 +15,7 @@ namespace GameFrame.Core
         public static void Start(IGame game)
         {
             game.Init();
-            
+
             var step = -1;
             Scene? scene = null;
 

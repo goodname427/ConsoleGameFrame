@@ -1,6 +1,4 @@
-﻿using GameFrame.MathCore;
-
-namespace GameFrame.Core
+﻿namespace GameFrame.Core
 {
     /// <summary>
     /// 组件，可以挂载在游戏物体上，赋予游戏物体一定的功能
@@ -12,7 +10,7 @@ namespace GameFrame.Core
         /// <summary>
         /// 组件所属gameobject
         /// </summary>
-        public GameObject GameObject { get; set; }
+        public GameObject GameObject { get; private set; }
 
         /// <summary>
         /// 组件所属场景
@@ -37,10 +35,15 @@ namespace GameFrame.Core
         /// </summary>
         public bool Enable { get; set; } = true;
 
-        public Component(GameObject gameObject)
+        protected Component(GameObject gameObject)
         {
             GameObject = gameObject;
             OwnerScene.OnComponentAdd(this);
+        }
+
+        protected override void OnDestoryed()
+        {
+            OwnerScene.OnComponentRemove(this);
         }
 
         public virtual void Update() { }

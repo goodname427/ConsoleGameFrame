@@ -1,6 +1,4 @@
-﻿using GameFrame.MathCore;
-
-namespace GameFrame.Physics
+﻿namespace GameFrame.Core.Physics
 {
     public interface IPrimitive
     {

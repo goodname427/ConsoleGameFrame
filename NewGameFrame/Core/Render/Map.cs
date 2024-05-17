@@ -1,7 +1,4 @@
-﻿using GameFrame.MathCore;
-using System.Reflection.Emit;
-
-namespace GameFrame.Render
+﻿namespace GameFrame.Core.Render
 {
     public class Map
     {

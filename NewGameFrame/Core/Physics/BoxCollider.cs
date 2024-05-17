@@ -1,15 +1,18 @@
-﻿using GameFrame.Core;
-using GameFrame.MathCore;
-using GameFrame.Render;
+﻿using GameFrame.Core.Render;
 
-namespace GameFrame.Physics
+namespace GameFrame.Core.Physics
 {
-    public class BoxCollider(GameObject gameObject) : Collider(gameObject)
+    public class BoxCollider : Collider
     {
         private readonly BoxPrimitive _box = new();
+
+        protected BoxCollider(GameObject gameObject) : base(gameObject)
+        {
+        }
+
         public Vector Min
-        { 
-            get => _box.Min; 
+        {
+            get => _box.Min;
             set => _box.Min = value;
         }
 
@@ -35,7 +38,7 @@ namespace GameFrame.Physics
 
             Min = -renderer.Image.Pivot;
             Max = new Vector(renderer.Image.Width - 1, renderer.Image.Height - 1) - renderer.Image.Pivot;
-        
+
             return this;
         }
     }

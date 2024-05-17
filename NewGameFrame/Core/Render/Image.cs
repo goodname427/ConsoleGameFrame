@@ -1,6 +1,4 @@
-﻿using GameFrame.MathCore;
-
-namespace GameFrame.Render
+﻿namespace GameFrame.Core.Render
 {
     public class Image
     {
@@ -36,7 +34,7 @@ namespace GameFrame.Render
         {
             get
             {
-                for (int i =0; i < Width; i++)
+                for (int i = 0; i < Width; i++)
                 {
                     for (int j = 0; j < Height; j++)
                     {

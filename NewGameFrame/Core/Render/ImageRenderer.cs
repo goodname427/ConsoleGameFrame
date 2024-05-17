@@ -1,6 +1,4 @@
-﻿using GameFrame.Core;
-
-namespace GameFrame.Render
+﻿namespace GameFrame.Core.Render
 {
     public class ImageRenderer(GameObject gameObject) : Renderer(gameObject)
     {

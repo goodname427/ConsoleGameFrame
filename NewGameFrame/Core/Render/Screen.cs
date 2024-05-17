@@ -1,7 +1,4 @@
-﻿using GameFrame.MathCore;
-using System.Runtime.InteropServices;
-
-namespace GameFrame.Render
+﻿namespace GameFrame.Core.Render
 {
     public class Screen
     {
@@ -9,6 +6,7 @@ namespace GameFrame.Render
 
         private ConsolePixel[,] _console = new ConsolePixel[0, 0];
 
+        #region 屏幕属性
         bool _isDrawFrame = true;
         /// <summary>
         /// 是否绘制屏幕边框
@@ -25,7 +23,6 @@ namespace GameFrame.Render
                 }
             }
         }
-
         /// <summary>
         /// 屏幕原点
         /// </summary>
@@ -34,7 +31,8 @@ namespace GameFrame.Render
         /// 光标停靠位置
         /// </summary>
         public Vector CursorHoldPosition { get; set; } = new Vector(0, Console.WindowHeight - 1);
-        
+        #endregion
+
         /// <summary>
         /// 提示信息
         /// </summary>
@@ -84,10 +82,14 @@ namespace GameFrame.Render
                 _console[i, j] = image;
         }
 
+        /// <summary>
+        /// 绘制屏幕边框
+        /// </summary>
+        /// <param name="clear"></param>
         private void DrawScreenFrame(bool clear = false)
         {
-            var horizontal = clear ? ConsolePixel.Empty : '_';
-            var vertical = clear ? '\0' : '|';
+            var horizontal = clear ? ConsolePixel.Empty : '♦';
+            var vertical = clear ? '\0' : '♦';
 
             var (width, height) = (_console.GetLength(0), _console.GetLength(1));
             for (int i = -1; i <= width; i++)

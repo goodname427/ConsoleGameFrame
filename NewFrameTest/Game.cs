@@ -1,8 +1,8 @@
 ﻿using GameFrame.Components;
 using GameFrame.Core;
-using GameFrame.Gameplay;
-using GameFrame.Physics;
-using GameFrame.Render;
+using GameFrame.Core.Physics;
+using GameFrame.Core.Render;
+using GameFrame.Editor;
 using GameFrame.UI;
 
 namespace FrameTest
@@ -18,7 +18,7 @@ namespace FrameTest
             switch (sceneIndex)
             {
                 case 0:
-                    var scene = GameManager.CreatScene(21, 21);
+                    var scene = SceneUtils.CreatScene(21, 21);
 
                     // 背景
                     var image = new Image(21, 21);

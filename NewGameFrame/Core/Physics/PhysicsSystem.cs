@@ -1,6 +1,4 @@
-﻿using GameFrame.MathCore;
-
-namespace GameFrame.Physics
+﻿namespace GameFrame.Core.Physics
 {
     public class PhysicsSystem
     {
@@ -45,6 +43,12 @@ namespace GameFrame.Physics
         {
             Colliders.Add(newCollider);
             ColliderPositionCache.Add(newCollider, newCollider.Transform.Position);
+        }
+
+        public void RemoveCollider(Collider removedCollider)
+        {
+            ColliderPositionCache.Remove(removedCollider);
+            ColliderPositionCache.Remove(removedCollider);
         }
 
         public void Update()

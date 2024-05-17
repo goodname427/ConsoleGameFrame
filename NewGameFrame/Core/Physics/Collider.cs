@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using GameFrame.Core;
-
-namespace GameFrame.Physics
+﻿namespace GameFrame.Core.Physics
 {
     public abstract class Collider(GameObject gameObject) : Component(gameObject)
     {
@@ -11,11 +8,11 @@ namespace GameFrame.Physics
         public event ColliderEventHandler? ColliderExit;
         public event ColliderEventHandler? ColliderSaty;
 
-        public abstract IPrimitive Primitive { get;}
+        public abstract IPrimitive Primitive { get; }
 
         public sealed override void Start() { }
         public sealed override void Update() { }
-    
+
         public void OnColliderEnter(Collider other)
         {
             ColliderEnter?.Invoke(other);
