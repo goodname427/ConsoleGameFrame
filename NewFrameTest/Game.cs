@@ -79,6 +79,8 @@ namespace FrameTest
             {
                 Step = -1;
             }
+
+            Screen.Instance!.HUD = Time.DeltaTime.ToString() + "           ";
         }
     }
 }

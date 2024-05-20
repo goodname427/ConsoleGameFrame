@@ -34,7 +34,7 @@
         /// <summary>
         /// 光标停靠位置
         /// </summary>
-        public Vector CursorHoldPosition { get; set; } = new Vector(0, Console.WindowHeight - 1);
+        public Vector CursorHoldPosition { get; set; } = new Vector(0, Console.WindowHeight - 2);
         #endregion
 
         /// <summary>
@@ -136,8 +136,8 @@
                 }
             }
 
-            SetCursorPosition(Math.Clamp(ScreenOrigin.X + CursorHoldPosition.X, 0, Console.WindowWidth - 1), Math.Clamp(ScreenOrigin.Y + CursorHoldPosition.Y, 0, Console.WindowHeight - 1));
-            Console.Write(HUD);
+            SetCursorPosition(Math.Clamp(CursorHoldPosition.X, 0, Console.WindowWidth - 1), Math.Clamp(CursorHoldPosition.Y, 0, Console.WindowHeight - 1));
+            Console.WriteLine(HUD);
         }
     }
 }

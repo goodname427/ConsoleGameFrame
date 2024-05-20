@@ -45,15 +45,15 @@ namespace GameFrame.Core
                 game.Update();
 
                 // 更新游戏时间
-                Time.TotalTime = stopwatch.ElapsedMilliseconds * 1000;
+                Time.TotalTime = stopwatch.ElapsedMilliseconds / 1000f;
                 Time.DeltaTime = Time.TotalTime - lastTime;
                 lastTime = Time.TotalTime;
 
                 // 限制帧时长
-                if (Time.DeltaTime < game.MinDeltaTime)
-                {
-                    Thread.Sleep((int)((game.MinDeltaTime - Time.DeltaTime) * 1000));
-                }
+                //if (Time.DeltaTime < game.MinDeltaTime)
+                //{
+                //    Thread.Sleep((int)((game.MinDeltaTime - Time.DeltaTime) * 1000));
+                //}
             }
 
             // game over
