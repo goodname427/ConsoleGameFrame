@@ -7,6 +7,10 @@
         private ConsolePixel[,] _console = new ConsolePixel[0, 0];
 
         #region 屏幕属性
+        /// <summary>
+        /// 开启后会在宽度上拉伸
+        /// </summary>
+        public bool EnableDoubleWidth { get; set; } = true;
         bool _isDrawFrame = true;
         /// <summary>
         /// 是否绘制屏幕边框
@@ -68,7 +72,7 @@
         /// <param name="image"></param>
         private void SetImage(int i, int j, ConsolePixel image, bool record = true)
         {
-            var x = (ScreenOrigin.X + i) * 2;
+            var x = (ScreenOrigin.X + i) * (EnableDoubleWidth ? 2 : 1);
             var y = ScreenOrigin.Y + j;
 
             if (!SetCursorPosition(x, y))
@@ -88,8 +92,8 @@
         /// <param name="clear"></param>
         private void DrawScreenFrame(bool clear = false)
         {
-            var horizontal = clear ? ConsolePixel.Empty : '♦';
-            var vertical = clear ? '\0' : '♦';
+            var horizontal = clear ? ConsolePixel.Empty : '〓';
+            var vertical = clear ? '\0' : '〓';
 
             var (width, height) = (_console.GetLength(0), _console.GetLength(1));
             for (int i = -1; i <= width; i++)

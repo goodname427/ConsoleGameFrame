@@ -2,13 +2,9 @@
 
 namespace GameFrame.Core.Physics
 {
-    public class BoxCollider : Collider
+    public class BoxCollider(GameObject gameObject) : Collider(gameObject)
     {
         private readonly BoxPrimitive _box = new();
-
-        protected BoxCollider(GameObject gameObject) : base(gameObject)
-        {
-        }
 
         public Vector Min
         {
@@ -28,9 +24,9 @@ namespace GameFrame.Core.Physics
         /// 设置
         /// </summary>
         /// <param name="renderer"></param>
-        public BoxCollider SetBoxToImage(ImageRenderer? renderer = null)
+        public BoxCollider SetColliderToImage(ImageRenderer? renderer = null)
         {
-            renderer ??= GameObject.GetComponet<ImageRenderer>();
+            renderer ??= GameObject.GetComponent<ImageRenderer>();
             if (renderer is null || renderer.Image is null)
             {
                 return this;

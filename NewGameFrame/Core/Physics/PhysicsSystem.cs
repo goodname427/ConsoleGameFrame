@@ -35,7 +35,7 @@
         /// <summary>
         /// 场景中的碰撞体
         /// </summary>
-        public readonly List<Collider> Colliders = [];
+        private readonly List<Collider> Colliders = [];
 
         private readonly Dictionary<Collider, Vector> ColliderPositionCache = [];
 
@@ -47,7 +47,7 @@
 
         public void RemoveCollider(Collider removedCollider)
         {
-            ColliderPositionCache.Remove(removedCollider);
+            Colliders.Remove(removedCollider);
             ColliderPositionCache.Remove(removedCollider);
         }
 
@@ -68,18 +68,22 @@
                         b.OnColliderEnter(a);
 
                         // 回退位置
-                        if (a.Transform.Position != aPos)
+                        if (!a.IsTrigger && !b.IsTrigger)
                         {
-                            a.Transform.Position = aPos;
-                        }
-                        if (b.Transform.Position != bPos)
-                        {
-                            b.Transform.Position = bPos;
+                            if (a.Transform.Position != aPos)
+                            {
+                                a.Transform.Position = aPos;
+                            }
+                            if (b.Transform.Position != bPos)
+                            {
+                                b.Transform.Position = bPos;
+                            }
                         }
                     }
                 }
             }
 
+            // 缓存位置
             foreach (var collider in Colliders)
             {
                 if (collider.Transform.Position != ColliderPositionCache[collider])

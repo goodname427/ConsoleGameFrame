@@ -1,6 +1,7 @@
 ﻿using GameFrame.Core.Physics;
 using GameFrame.Core.Render;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Linq;
 
 namespace GameFrame.Core
 {
@@ -156,11 +157,18 @@ namespace GameFrame.Core
             }
         }
 
+        /// <summary>
+        /// 游戏物体被创建时调用
+        /// </summary>
+        /// <param name="newGameObject"></param>
         public void OnGameObjectAdd(GameObject newGameObject)
         {
             _gameObjects.Add(newGameObject);
         }
-
+        /// <summary>
+        /// 游戏物体被移除时调用
+        /// </summary>
+        /// <param name="removedGameObject"></param>
         public void OnGameObjectRemoved(GameObject removedGameObject)
         {
             _gameObjects.Remove(removedGameObject);
@@ -175,16 +183,13 @@ namespace GameFrame.Core
         /// <returns></returns>
         public T? FindGameObjectByType<T>() where T : GameObject
         {
-            foreach (var gameObject in GameObjects)
-            {
-                if (gameObject is T result)
-                {
-                    return result;
-                }
-            }
-
-            return null;
+            return GameObjects.FirstOrDefault(x => x is T) as T;
         }
+        public GameObject? FindGameObjectByName(string name)
+        {
+            return GameObjects.FirstOrDefault(x => x.Name == name);
+        }
+
         /// <summary>
         /// 寻找场景中的指定组件
         /// </summary>
@@ -205,6 +210,7 @@ namespace GameFrame.Core
             }
             return null;
         }
+        
         #endregion
     }
 }

@@ -12,31 +12,34 @@ namespace GameFrame.Core
         /// </summary>
         public static ReadOnlyDictionary<string, ConsoleKey> KeyMapping { get; private set; } = new(new Dictionary<string, ConsoleKey>
         {
-            {"Up",ConsoleKey.W },
-            {"Left",ConsoleKey.A },
-            {"Down",ConsoleKey.S },
-            {"Right",ConsoleKey.D },
+            {"Up", ConsoleKey.W },
+            {"Left", ConsoleKey.A },
+            {"Down", ConsoleKey.S },
+            {"Right", ConsoleKey.D },
         });
 
         /// <summary>
         /// 检测是否有任何键按下
         /// </summary>
-        public static bool AnyKey => CurrentInput is not null;
+        public static bool AnyKey => _currentInputs.Count > 0;
 
-        public static ConsoleKey? CurrentInput { get; private set; }
+        private static readonly List<ConsoleKey> _currentInputs = [];
+        /// <summary>
+        /// 当前输入
+        /// </summary>
+        public static ReadOnlyCollection<ConsoleKey> CurrentInputs => _currentInputs.AsReadOnly();
 
         /// <summary>
         /// 获取输入
         /// </summary>
         /// <returns></returns>
-        public static ConsoleKey? GetInput()
+        public static void GetInput()
         {
-            CurrentInput = null;
-            if (Console.KeyAvailable)
+            _currentInputs.Clear();
+            while (Console.KeyAvailable)
             {
-                CurrentInput = Console.ReadKey().Key;
+                _currentInputs.Add(Console.ReadKey().Key);
             }
-            return CurrentInput;
         }
         /// <summary>
         /// 判断是否输入指定键
@@ -45,7 +48,7 @@ namespace GameFrame.Core
         /// <returns></returns>
         public static bool GetKey(ConsoleKey key)
         {
-            return CurrentInput == key;
+            return _currentInputs.Contains(key);
         }
         /// <summary>
         /// 获取横轴向
@@ -53,12 +56,7 @@ namespace GameFrame.Core
         /// <returns></returns>
         public static int GetHorizontal()
         {
-            return CurrentInput switch
-            {
-                ConsoleKey.D => 1,
-                ConsoleKey.A => -1,
-                _ => 0
-            };
+            return (GetKey(KeyMapping["Left"]) ? -1 : 0) + (GetKey(KeyMapping["Right"]) ? 1 : 0);
         }
         /// <summary>
         /// 获取纵轴向
@@ -66,12 +64,7 @@ namespace GameFrame.Core
         /// <returns></returns>
         public static int GetVertical()
         {
-            return CurrentInput switch
-            {
-                ConsoleKey.W => 1,
-                ConsoleKey.S => -1,
-                _ => 0
-            };
+            return (GetKey(KeyMapping["Down"]) ? -1 : 0) + (GetKey(KeyMapping["Up"]) ? 1 : 0);
         }
         /// <summary>
         /// 获取方向
@@ -79,14 +72,7 @@ namespace GameFrame.Core
         /// <returns></returns>
         public static Vector GetDirection()
         {
-            return CurrentInput switch
-            {
-                ConsoleKey.W => Vector.Up,
-                ConsoleKey.S => Vector.Down,
-                ConsoleKey.A => Vector.Left,
-                ConsoleKey.D => Vector.Right,
-                _ => Vector.Zero
-            };
+            return new Vector(GetHorizontal(), GetVertical());
         }
     }
 }

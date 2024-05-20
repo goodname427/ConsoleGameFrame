@@ -38,7 +38,7 @@ namespace GameFrame.UI
                         continue;
                     }
 
-                    renderCache[i, renderCache.Height - j] = pixel;
+                    renderCache[i, j] = pixel;
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace GameFrame.UI
                 string text = "你好，我是陈冠霖";
                 for (int i = 0; i < text.Length; i++)
                 {
-                    _renderCache[i, _renderCache.Width - 1] = text[i];
+                    _renderCache[i, 0] = text[i];
                 }
                 return _renderCache;
             }

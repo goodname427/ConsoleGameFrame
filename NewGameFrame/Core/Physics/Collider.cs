@@ -8,6 +8,7 @@
         public event ColliderEventHandler? ColliderExit;
         public event ColliderEventHandler? ColliderSaty;
 
+        public bool IsTrigger { get; set; }
         public abstract IPrimitive Primitive { get; }
 
         public sealed override void Start() { }

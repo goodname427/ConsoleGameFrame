@@ -3,54 +3,47 @@ using GameFrame.Core;
 using GameFrame.Core.Physics;
 using GameFrame.Core.Render;
 using GameFrame.Editor;
+using GameFrame.Extra;
 using GameFrame.UI;
 
 namespace FrameTest
 {
-    internal class Game : IGame
+    internal class Game : DefaultGame
     {
-        public int Step { get; set; }
-
-        public float MinDeltaTime => 0.0083f;
-
-        public Scene? GetScene(int sceneIndex)
+        public override Scene? GetScene(int sceneIndex)
         {
             switch (sceneIndex)
             {
                 case 0:
-                    var scene = SceneUtils.CreatScene(21, 21);
+                    var scene = SceneUtils.CreatScene(100, 50);
 
                     // 背景
-                    var image = new Image(21, 21);
-                    var r = new Random();
-                    for (int i = 0; i < image.Width; i++)
-                    {
-                        for (int j = 0; j < image.Height; j++)
-                        {
-                            image[i, j] = '.';
-                        }
-                    }
+                    var backImage = Image.Read(@"C:\Users\galenglchen\Desktop\test.txt") ?? new Image();
 
-                    var background = new GameObject(scene, transform: new(new(0, 0))).AddComponet<ImageRenderer>().Image = image;
+                    var background = new GameObject(scene, transform: new(new(0, 0)));
+                    background.AddComponet<ImageRenderer>().Image = backImage;
+                    background.AddComponet<BoxCollider>().SetColliderToImage().IsTrigger = true;
 
                     // 墙
-                    var wall = new GameObject(scene, "Wall", new(new(3, 5)));
-                    wall.AddComponet<ImageRenderer>().Image = new('%', 10, 1);
-                    wall.AddComponet<BoxCollider>().SetBoxToImage();
+                    //var wall = new GameObject(scene, "Wall", new(new(3, 5)));
+                    //wall.AddComponet<ImageRenderer>().Image = new('%', 10, 1);
+                    //wall.AddComponet<BoxCollider>().SetBoxToImage();
 
                     // 玩家
                     var p = new GameObject(scene, "Player", new(new(0, 0, 1)));
 
-                    var pImgea = new Image(new ConsolePixel[,]
+                    var pImgae = new Image(new ConsolePixel[,]
                     {
                         { '#', '\0', '#', '\0' },
                         { '\0', '#', '#' , '#'},
                         { '#', '\0', '#' , '\0'},
                     });
 
-                    p.AddComponet<ImageRenderer>().Image = pImgea;
+                    pImgae.IndexEnumerator.Foreach(pos => pImgae[pos] = pImgae[pos] with { Color = ConsoleColor.Yellow });
+                    p.AddComponet<Player>();
+                    p.AddComponet<ImageRenderer>().Image = pImgae;
                     p.AddComponet<Movement>();
-                    p.AddComponet<BoxCollider>().SetBoxToImage().ColliderEnter += (other) => Screen.Instance!.HUD = ($"{p.Name} interact with {other.Name}");
+                    //p.AddComponet<CustomCollider>().SetColliderToImage().ColliderEnter += (other) => Screen.Instance!.HUD = ($"{p.Name} interact with {other.Name}");
 
                     scene.FindComponentByType<Camera>()!.GameObject.Transform.Parent = p.Transform;
 
@@ -62,17 +55,29 @@ namespace FrameTest
             }
         }
 
-        public void Init()
+        public override void Init()
         {
-            _ = new Screen();
-            Step = 0;
+            base.Init();
+            Screen.Instance!.EnableDoubleWidth = false;
         }
 
-        public void Update()
+        public override void Update()
         {
-            if (Input.CurrentInput == ConsoleKey.Spacebar)
+            if (Input.GetKey(ConsoleKey.Spacebar))
             {
                 Screen.Instance!.IsDrawFrame = !Screen.Instance.IsDrawFrame;
+            }
+
+            if (Input.GetKey(ConsoleKey.P))
+            {
+                var go = Scene.CurrentScene?.FindGameObjectByName("Wall");
+                //go?.Destory();
+                go?.RemoveComponent<BoxCollider>();
+            }
+
+            if (Input.GetKey(ConsoleKey.Escape))
+            {
+                Step = -1;
             }
         }
     }

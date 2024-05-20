@@ -3,14 +3,14 @@
     /// <summary>
     /// 组件，可以挂载在游戏物体上，赋予游戏物体一定的功能
     /// </summary>
-    public abstract class Component : Object
+    public abstract class Component(GameObject gameObject) : Object
     {
         public bool Init = false;
 
         /// <summary>
         /// 组件所属gameobject
         /// </summary>
-        public GameObject GameObject { get; private set; }
+        public GameObject GameObject { get; private set; } = gameObject;
 
         /// <summary>
         /// 组件所属场景
@@ -35,15 +35,16 @@
         /// </summary>
         public bool Enable { get; set; } = true;
 
-        protected Component(GameObject gameObject)
+        /// <summary>
+        /// !!请不要手动调用该函数!! <br/>
+        /// 如果需要销毁组件请使用 
+        /// <code>
+        /// GameObject.RemoveComponent(this)
+        /// </code>
+        /// </summary>
+        public sealed override void Destory()
         {
-            GameObject = gameObject;
-            OwnerScene.OnComponentAdd(this);
-        }
-
-        protected override void OnDestoryed()
-        {
-            OwnerScene.OnComponentRemove(this);
+            base.Destory();
         }
 
         public virtual void Update() { }

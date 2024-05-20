@@ -11,7 +11,7 @@ namespace GameFrame.Core
         public Object Clone()
         {
             // todo
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             
             var type = GetType();
             
@@ -40,15 +40,12 @@ namespace GameFrame.Core
         {
             return Clone() as T ?? throw new InvalidCastException();
         }
-    
-        public void Destory()
+
+        public virtual void Destory()
         {
             OnDestoryed();
         }
 
-        protected virtual void OnDestoryed()
-        {
-
-        }
+        protected virtual void OnDestoryed() { }
     }
 }

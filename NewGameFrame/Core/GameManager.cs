@@ -12,8 +12,11 @@ namespace GameFrame.Core
         /// </summary>
         /// <param name="game"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public static void Start(IGame game)
+        public static void Run(IGame game)
         {
+            Console.WriteLine("Press Enter To Start Game!!!");
+            Console.ReadLine();
+
             game.Init();
 
             var step = -1;
@@ -52,6 +55,14 @@ namespace GameFrame.Core
                     Thread.Sleep((int)((game.MinDeltaTime - Time.DeltaTime) * 1000));
                 }
             }
+
+            // game over
+            Console.Beep();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.CursorLeft = 0;
+            Console.CursorTop = Console.WindowHeight - 2;
+            Console.WriteLine("_Game Over! Press Any Key To Exit....");
+            Console.ReadKey();
         }
     }
 }

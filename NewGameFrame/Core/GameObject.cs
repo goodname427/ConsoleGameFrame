@@ -1,6 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using GameFrame.Extra;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 namespace GameFrame.Core
 {
@@ -43,6 +42,7 @@ namespace GameFrame.Core
 
         protected override void OnDestoryed()
         {
+            Enumerable.Range(0, _componets.Count).Foreach(i => RemoveComponent(null, i, false, false));
             OwnerScene.OnGameObjectRemoved(this);
         }
 
@@ -56,7 +56,11 @@ namespace GameFrame.Core
         /// </summary>
         public ReadOnlyCollection<Component> Componets => _componets.AsReadOnly();
 
-        protected int GetComponentIndex<T>() where T : Component
+        private int GetComponentIndex(Component component)
+        {
+            return _componets.FindIndex(0, c => c == component);
+        }
+        private int GetComponentIndex<T>() where T : Component
         {
             return _componets.FindIndex(0, c => c is T);
         }
@@ -72,7 +76,10 @@ namespace GameFrame.Core
             var type = typeof(T);
             if (Activator.CreateInstance(type, [this]) is not T component)
                 throw new NotImplementedException(nameof(component));
+
             _componets.Add(component);
+            OwnerScene.OnComponentAdd(component);
+
             return component;
         }
 
@@ -81,7 +88,7 @@ namespace GameFrame.Core
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T? GetComponet<T>() where T : Component
+        public T? GetComponent<T>() where T : Component
         {
             var index = GetComponentIndex<T>();
             return index == -1 ? null : _componets[index] as T;
@@ -97,29 +104,66 @@ namespace GameFrame.Core
         }
 
         /// <summary>
+        /// 移除组件
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="index"></param>
+        /// <param name="removedByIndex"></param>
+        /// <param name="removeComponent"></param>
+        /// <returns></returns>
+        private bool RemoveComponent(Component? component, int index, bool removedByIndex = true, bool removeComponent = true)
+        {
+            if (index == -1 && removedByIndex && removeComponent)
+            {
+                return false;
+            }
+
+            if (component == null && index == -1)
+            {
+                return false;
+            }
+
+            component ??= _componets[index];
+
+            // 从场景中移除组件
+            OwnerScene.OnComponentRemove(component);
+
+            // 从game object中移除组件
+            bool removed = true;
+            if (removeComponent)
+            {
+                if (removedByIndex)
+                {
+                    _componets.RemoveAt(index);
+                }
+                else
+                {
+                    removed = _componets.Remove(component);
+                }
+            }
+
+            // 销毁组件
+            component.Destory();
+            return removed;
+        }
+
+        /// <summary>
         /// 移除Component
         /// </summary>
         /// <param name="component"></param>
         /// <returns></returns>
         public bool RemoveComponent(Component component)
         {
-            return _componets.Remove(component);
+            return RemoveComponent(component, GetComponentIndex(component));
         }
         /// <summary>
         /// 移除Component
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public bool RemoveComponent<T>() where T: Component
+        public bool RemoveComponent<T>() where T : Component
         {
-            var index = GetComponentIndex<T>();
-            if (index != -1)
-            {
-                _componets.RemoveAt(index);
-                return true;
-            }
-
-            return false;
+            return RemoveComponent(null, GetComponentIndex<T>());
         }
         /// <summary>
         /// remove all components of type
@@ -132,7 +176,7 @@ namespace GameFrame.Core
             bool removed = false;
             foreach (var component in components)
             {
-                removed |= _componets.Remove(component);
+                removed |= RemoveComponent(component, -1, false);
             }
 
             return removed;

@@ -1,6 +1,6 @@
 ﻿namespace GameFrame.Core.Render
 {
-    public class Camera : Component
+    public class Camera(GameObject gameObject) : Component(gameObject)
     {
         /// <summary>
         /// 相机宽度
@@ -19,10 +19,6 @@
         /// 投影的屏幕
         /// </summary>
         public Screen? ProjectScreen { get; set; } = Screen.Instance;
-
-        protected Camera(GameObject gameObject) : base(gameObject)
-        {
-        }
 
         #region 渲染
         /// <summary>

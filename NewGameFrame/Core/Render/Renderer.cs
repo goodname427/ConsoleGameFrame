@@ -2,7 +2,7 @@
 {
     public abstract class Renderer(GameObject gameObject) : Component(gameObject)
     {
-        public int RenderLayer;
+        public int RenderLayer { get; set; }
 
         /// <summary>
         /// 绘制图片到地图上

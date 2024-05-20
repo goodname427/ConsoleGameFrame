@@ -1,9 +1,7 @@
 ﻿namespace GameFrame.Core.Physics
 {
-    public class Rigidbody : Component
+    public class Rigidbody(GameObject gameObject) : Component(gameObject)
     {
-        protected Rigidbody(GameObject gameObject) : base(gameObject)
-        {
-        }
+        
     }
 }

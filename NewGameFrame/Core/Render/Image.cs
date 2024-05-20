@@ -1,4 +1,6 @@
-﻿namespace GameFrame.Core.Render
+﻿using System.Net;
+
+namespace GameFrame.Core.Render
 {
     public class Image
     {
@@ -43,6 +45,21 @@
                 }
             }
         }
+
+        public IEnumerable<(int i, int j)> IndexEnumerator
+        {
+            get
+            {
+                for (int i = 0; i < Width; i++)
+                {
+                    for (int j = 0; j < Height; j++)
+                    {
+                        yield return (i, j);
+                    }
+                }
+            }
+        }
+
         public ConsolePixel this[int x, int y]
         {
             get
@@ -96,6 +113,38 @@
                     Data[x, y] = pixel;
                 }
             }
+        }
+        public static Image? Read(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                return null;
+            }
+
+            var lines = File.ReadAllLines(filename);
+
+            // 获取文本最大长度
+            var maxLineLength = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Length > maxLineLength)
+                {
+                    maxLineLength = lines[i].Length;
+                }
+            }
+
+            var image = new Image(maxLineLength, lines.Length);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                for (int j = 0; j < maxLineLength; j++)
+                {
+                    char c = j >= lines[i].Length ? '\0' : lines[i][j];
+                    image[j, image.Height - i - 1] = c;
+                }
+            }
+
+            return image;
         }
         #endregion
 
