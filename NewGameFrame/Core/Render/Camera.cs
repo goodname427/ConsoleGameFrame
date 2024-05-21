@@ -3,6 +3,10 @@
     public class Camera(GameObject gameObject) : Component(gameObject)
     {
         /// <summary>
+        /// 自适应相机大小为屏幕大小
+        /// </summary>
+        public bool AutoAdjustConsoleWindow { get; set; } = true;
+        /// <summary>
         /// 相机宽度
         /// </summary>
         public int Width { get => Size.X; set => Size = Size with { X = value }; }
@@ -34,18 +38,31 @@
         {
             get
             {
+                // 前置检测
                 ProjectScreen ??= Screen.Instance;
+                ArgumentNullException.ThrowIfNull(ProjectScreen);
+                ArgumentNullException.ThrowIfNull(OwnerScene);
 
-                if (ProjectScreen is null)
-                    throw new ArgumentNullException(nameof(ProjectScreen));
+                // 相机跟随窗口变化
+                if (AutoAdjustConsoleWindow)
+                {
+                    if (Width != Screen.ConsoleWindowWidth - 2)
+                    {
+                        Width = Screen.ConsoleWindowWidth - 2;
+                    }
+                    if (Height != Screen.ConsoleWindowHeight - 2)
+                    {
+                        Height = Screen.ConsoleWindowHeight - 2;
+                    }
+                }
 
-                if (OwnerScene is null)
-                    throw new ArgumentNullException(nameof(OwnerScene));
-
+                // 扩容
                 if (Map.IsOutSide(_renderCache.Data, new(Width - 1, Height - 1)))
+                {
                     _renderCache.Resize(Width, Height);
+                }
 
-                // 在这里会将场景坐标系转为屏幕坐标系，场景坐标系为（x→,y↑），屏幕坐标系为（x→,y↓）
+                // 在这里会将场景坐标系转为屏幕坐标系，场景坐标系为（x→,y↑），屏幕坐标系为（x→,y↓），y轴会进行颠倒
                 var start = new Vector(Transform.Position.X - Width / 2, Transform.Position.Y + Height / 2);
                 for (int i = 0; i < Width; i++)
                 {
@@ -55,6 +72,7 @@
                     }
                 }
 
+                // 后处理，UI会在这里进行绘制
                 foreach (var renderPass in RenderPasses)
                 {
                     renderPass.RenderPass(this, _renderCache);

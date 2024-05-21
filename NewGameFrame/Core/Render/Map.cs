@@ -83,7 +83,8 @@
             get
             {
                 var index = GetQuadrantIndexAndPosition(ref position);
-                return TryGetValue(_quadrant[index], position);
+                //return TryGetValue(_quadrant[index], position);
+                return IsOutSide(_quadrant[index], position) ? ConsolePixel.Empty : _quadrant[index][position.X, position.Y];
             }
             set
             {

@@ -15,7 +15,7 @@ namespace FrameTest
             switch (sceneIndex)
             {
                 case 0:
-                    var scene = SceneUtils.CreatScene(100, 50);
+                    var scene = SceneUtils.CreatScene();
 
                     // 背景
                     var backImage = Image.Read(@"C:\Users\galenglchen\Desktop\test.txt") ?? new Image();
@@ -39,15 +39,18 @@ namespace FrameTest
                         { '#', '\0', '#' , '\0'},
                     });
 
-                    pImgae.IndexEnumerator.Foreach(pos => pImgae[pos] = pImgae[pos] with { Color = ConsoleColor.Yellow });
+                    pImgae.IndexEnumerator.Foreach(pos => pImgae[pos].Color = ConsoleColor.Yellow);
                     p.AddComponet<Player>();
                     p.AddComponet<ImageRenderer>().Image = pImgae;
                     p.AddComponet<Movement>();
                     //p.AddComponet<CustomCollider>().SetColliderToImage().ColliderEnter += (other) => Screen.Instance!.HUD = ($"{p.Name} interact with {other.Name}");
 
-                    scene.FindComponentByType<Camera>()!.GameObject.Transform.Parent = p.Transform;
-
-                    var canvas = new GameObject(scene, "Canvas").AddComponet<Canvas>();
+                    var camera = scene.FindComponentByType<Camera>();
+                    camera!.GameObject.Transform.Parent = p.Transform;
+                    //camera!.AutoAdjustConsoleWindow = false;
+                    //camera!.Width = 42;
+                    //camera!.Height = 21;
+                    //var canvas = new GameObject(scene, "Canvas").AddComponet<Canvas>();
 
                     return scene;
                 default:

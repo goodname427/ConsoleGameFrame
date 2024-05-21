@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using GameFrame.Core.Render;
+using System.Diagnostics;
 
 namespace GameFrame.Core
 {
@@ -17,6 +18,7 @@ namespace GameFrame.Core
             Console.WriteLine("Press Enter To Start Game!!!");
             Console.ReadLine();
 
+            Screen.UpdateConsoleWindowSizeInfo();
             game.Init();
 
             var step = -1;
@@ -41,6 +43,7 @@ namespace GameFrame.Core
                 }
 
                 //场景更新
+                Screen.UpdateConsoleWindowSizeInfo();
                 scene.Update();
                 game.Update();
 
