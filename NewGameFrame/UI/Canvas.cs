@@ -5,6 +5,7 @@ namespace GameFrame.UI
 {
     public class Canvas : Renderer
     {
+        #region 类声明
         /// <summary>
         /// 相机覆盖模式
         /// </summary>
@@ -19,15 +20,12 @@ namespace GameFrame.UI
             /// </summary>
             Scene
         }
-
-        class CanvasCameraRenderPass : ICameraRenderPass
+        /// <summary>
+        /// UI渲染通道
+        /// </summary>
+        class CanvasCameraRenderPass(Canvas canvas) : ICameraRenderPass
         {
-            public Canvas Canvas { get; }
-
-            public CanvasCameraRenderPass(Canvas canvas)
-            {
-                Canvas = canvas;
-            }
+            public Canvas Canvas { get; } = canvas;
 
             public void RenderPass(Camera camera, Image renderCache)
             {
@@ -42,6 +40,7 @@ namespace GameFrame.UI
                 }
             }
         }
+        #endregion
 
         public Canvas(GameObject gameObject) : base(gameObject)
         {
@@ -49,6 +48,7 @@ namespace GameFrame.UI
             OverrideMode = CanvasOverrideMode.Camera;
         }
 
+        #region 渲染覆盖
         private CanvasOverrideMode _overrideMode;
         /// <summary>
         /// 相机覆盖模式
@@ -71,11 +71,15 @@ namespace GameFrame.UI
                 }
             }
         }
-
-        void OverrideCamera(Camera camera)
+        
+        /// <summary>
+        /// 覆盖相机
+        /// </summary>
+        /// <param name="camera"></param>
+        private void OverrideCamera(Camera camera)
         {
             camera.RenderPasses.Add(_cameraRenderPass);
-            _renderCache.Resize(camera.Width, camera.Height);
+            ;
         }
 
         /// <summary>
@@ -103,7 +107,46 @@ namespace GameFrame.UI
                 _overridenCamera = value;
             }
         }
+        #endregion
 
+        #region 尺寸
+        private int _width = 0;
+        /// <summary>
+        /// 画布宽度
+        /// </summary>
+        public int Width
+        {
+            get
+            {
+                return OverridenCamera?.Width ?? _width;
+            }
+            set
+            {
+                if (OverridenCamera == null)
+                {
+                    _width = value;
+                }
+            }
+        }
+        private int _height = 0;
+        /// <summary>
+        /// 画布高度
+        /// </summary>
+        public int Height
+        {
+            get
+            {
+                return OverridenCamera?.Height ?? _height;
+            }
+            set
+            {
+                if (OverridenCamera == null)
+                {
+                    _height = value;
+                }
+            }
+        }
+        #endregion
 
 
         private readonly Image _renderCache = new();
@@ -111,10 +154,15 @@ namespace GameFrame.UI
         {
             get
             {
-                string text = "你好，我是陈冠霖";
-                for (int i = 0; i < text.Length; i++)
+                if (_renderCache.Height != Height || _renderCache.Width != Width)
                 {
-                    _renderCache[i, 0] = text[i];
+                    _renderCache.Resize(Width, Height, true);
+                }
+
+                string text = "Hello, I'm ChenGuanLin!";
+                for (int i = 0; i < text.Length && i < Width; i++)
+                {
+                    _renderCache[i, Height - 1] = new(text[i], ConsoleColor.Black, ConsoleColor.White);
                 }
                 return _renderCache;
             }

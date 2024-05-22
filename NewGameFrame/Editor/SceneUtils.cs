@@ -13,14 +13,12 @@ namespace GameFrame.Editor
         /// <param name="cameraPostionX"></param>
         /// <param name="cameraPositionY"></param>
         /// <returns></returns>
-        public static Scene CreatScene(int cameraWidth = 21, int cameraHeigth = 21, int cameraPostionX = 0, int cameraPositionY = 0)
+        public static Scene CreatDefaultScene()
         {
             var scene = new Scene();
 
             var go = new GameObject(scene);
-            go.Transform.Position = new(cameraPostionX, cameraPositionY);
-            var camera = go.AddComponet<Camera>();
-            camera.Size = new Vector(cameraWidth, cameraHeigth);
+            go.AddComponet<Camera>();
 
             return scene;
         }

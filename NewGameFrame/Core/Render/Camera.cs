@@ -3,26 +3,22 @@
     public class Camera(GameObject gameObject) : Component(gameObject)
     {
         /// <summary>
-        /// 自适应相机大小为屏幕大小
-        /// </summary>
-        public bool AutoAdjustConsoleWindow { get; set; } = true;
-        /// <summary>
         /// 相机宽度
         /// </summary>
-        public int Width { get => Size.X; set => Size = Size with { X = value }; }
+        public int Width => ProjectScreen?.Width ?? 0;
         /// <summary>
         /// 相机高度
         /// </summary>
-        public int Height { get => Size.Y; set => Size = Size with { Y = value }; }
+        public int Height => ProjectScreen?.Height ?? 0;
         /// <summary>
         /// 相机尺寸
         /// </summary>
-        public Vector Size { get; set; } = Vector.Zero;
+        public Vector Size => new(Width, Height);
 
         /// <summary>
         /// 投影的屏幕
         /// </summary>
-        public Screen? ProjectScreen { get; set; } = Screen.Instance;
+        public Screen? ProjectScreen { get; set; } = Screen.Main;
 
         #region 渲染
         /// <summary>
@@ -39,36 +35,23 @@
             get
             {
                 // 前置检测
-                ProjectScreen ??= Screen.Instance;
+                ProjectScreen ??= Screen.Main;
                 ArgumentNullException.ThrowIfNull(ProjectScreen);
                 ArgumentNullException.ThrowIfNull(OwnerScene);
 
-                // 相机跟随窗口变化
-                if (AutoAdjustConsoleWindow)
-                {
-                    if (Width != Screen.ConsoleWindowWidth - 2)
-                    {
-                        Width = Screen.ConsoleWindowWidth - 2;
-                    }
-                    if (Height != Screen.ConsoleWindowHeight - 2)
-                    {
-                        Height = Screen.ConsoleWindowHeight - 2;
-                    }
-                }
-
                 // 扩容
-                if (Map.IsOutSide(_renderCache.Data, new(Width - 1, Height - 1)))
+                if (_renderCache.Width != Width || _renderCache.Height != Height)
                 {
                     _renderCache.Resize(Width, Height);
                 }
 
                 // 在这里会将场景坐标系转为屏幕坐标系，场景坐标系为（x→,y↑），屏幕坐标系为（x→,y↓），y轴会进行颠倒
-                var start = new Vector(Transform.Position.X - Width / 2, Transform.Position.Y + Height / 2);
+                var start = new Vector(Transform.Position.X - Width / 2, Transform.Position.Y - Height / 2);
                 for (int i = 0; i < Width; i++)
                 {
                     for (int j = 0; j < Height; j++)
                     {
-                        _renderCache[i, j] = OwnerScene.Map[start.X + i, start.Y - j];
+                        _renderCache[i, j] = OwnerScene.Map[start.X + i, start.Y + j];
                     }
                 }
 

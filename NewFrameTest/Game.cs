@@ -15,7 +15,7 @@ namespace FrameTest
             switch (sceneIndex)
             {
                 case 0:
-                    var scene = SceneUtils.CreatScene();
+                    var scene = SceneUtils.CreatDefaultScene();
 
                     // 背景
                     var backImage = Image.Read(@"C:\Users\galenglchen\Desktop\test.txt") ?? new Image();
@@ -32,14 +32,16 @@ namespace FrameTest
                     // 玩家
                     var p = new GameObject(scene, "Player", new(new(0, 0, 1)));
 
-                    var pImgae = new Image(new ConsolePixel[,]
-                    {
-                        { '#', '\0', '#', '\0' },
-                        { '\0', '#', '#' , '#'},
-                        { '#', '\0', '#' , '\0'},
-                    });
+                    var pImgae =
+                        new Image('P');
+                        //new Image(new ConsolePixel[,]
+                        //{
+                        //    { '#', '\0', '#', '\0' },
+                        //    { '\0', '#', '#' , '#'},
+                        //    { '#', '\0', '#' , '\0'},
+                        //});
 
-                    pImgae.IndexEnumerator.Foreach(pos => pImgae[pos].Color = ConsoleColor.Yellow);
+                    pImgae.IndexEnumerator.Foreach(pos => pImgae[pos] = pImgae[pos] with { Color = ConsoleColor.Yellow });
                     p.AddComponet<Player>();
                     p.AddComponet<ImageRenderer>().Image = pImgae;
                     p.AddComponet<Movement>();
@@ -50,7 +52,7 @@ namespace FrameTest
                     //camera!.AutoAdjustConsoleWindow = false;
                     //camera!.Width = 42;
                     //camera!.Height = 21;
-                    //var canvas = new GameObject(scene, "Canvas").AddComponet<Canvas>();
+                    var canvas = new GameObject(scene, "Canvas").AddComponet<Canvas>();
 
                     return scene;
                 default:
@@ -61,14 +63,14 @@ namespace FrameTest
         public override void Init()
         {
             base.Init();
-            Screen.Instance!.EnableDoubleWidth = false;
+            Screen.Main!.EnableDoubleWidth = false;
         }
 
         public override void Update()
         {
             if (Input.GetKey(ConsoleKey.Spacebar))
             {
-                Screen.Instance!.IsDrawFrame = !Screen.Instance.IsDrawFrame;
+                Screen.Main!.IsDrawFrame = !Screen.Main.IsDrawFrame;
             }
 
             if (Input.GetKey(ConsoleKey.P))
@@ -83,7 +85,7 @@ namespace FrameTest
                 Step = -1;
             }
 
-            Screen.Instance!.HUD = Time.DeltaTime.ToString() + "           ";
+            Screen.Main!.HUD = Time.DeltaTime.ToString() + "           ";
         }
     }
 }

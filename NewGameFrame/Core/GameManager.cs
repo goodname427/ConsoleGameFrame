@@ -15,8 +15,8 @@ namespace GameFrame.Core
         /// <exception cref="ArgumentNullException"></exception>
         public static void Run(IGame game)
         {
-            Console.WriteLine("Press Enter To Start Game!!!");
-            Console.ReadLine();
+            //Console.WriteLine("Press Enter To Start Game!!!");
+            //Console.ReadLine();
 
             Screen.UpdateConsoleWindowSizeInfo();
             game.Init();

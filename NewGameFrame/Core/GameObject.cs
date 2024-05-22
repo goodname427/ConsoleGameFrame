@@ -113,6 +113,11 @@ namespace GameFrame.Core
         /// <returns></returns>
         private bool RemoveComponent(Component? component, int index, bool removedByIndex = true, bool removeComponent = true)
         {
+            if (component != null && component.GameObject != this)
+            {
+                return false;
+            }
+
             if (index == -1 && removedByIndex && removeComponent)
             {
                 return false;

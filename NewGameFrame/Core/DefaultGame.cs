@@ -11,7 +11,7 @@ namespace GameFrame.Core
 
         public virtual Scene? GetScene(int sceneIndex)
         {
-            return SceneUtils.CreatScene();
+            return SceneUtils.CreatDefaultScene();
         }
 
         public virtual void Init()

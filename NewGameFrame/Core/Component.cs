@@ -5,18 +5,14 @@
     /// </summary>
     public abstract class Component(GameObject gameObject) : Object
     {
-        public bool Init = false;
-
         /// <summary>
         /// 组件所属gameobject
         /// </summary>
         public GameObject GameObject { get; private set; } = gameObject;
-
         /// <summary>
         /// 组件所属场景
         /// </summary>
         public Scene OwnerScene => GameObject.OwnerScene;
-
         /// <summary>
         /// 组件所属gameobject的名称
         /// </summary>
@@ -41,12 +37,27 @@
         /// <code>
         /// GameObject.RemoveComponent(this)
         /// </code>
+        /// 或者
+        /// <code>
+        /// Remove()
+        /// </code>
         /// </summary>
         public sealed override void Destory()
         {
             base.Destory();
         }
+        /// <summary>
+        /// 移除组件
+        /// </summary>
+        public void Remove()
+        {
+            GameObject.RemoveComponent(this);
+        }
 
+        /// <summary>
+        /// 组件是否初始化
+        /// </summary>
+        public bool Init { get; set; } = false;
         public virtual void Update() { }
         public virtual void Start() { }
     }

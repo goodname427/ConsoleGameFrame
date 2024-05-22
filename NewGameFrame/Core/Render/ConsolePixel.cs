@@ -1,6 +1,6 @@
 ﻿namespace GameFrame.Core.Render
 {
-    public class ConsolePixel
+    public struct ConsolePixel
     {
         public static readonly ConsolePixel Empty = new();
 
@@ -37,15 +37,15 @@
         }
         #endregion
 
-        public bool IsEmpty()
+        public readonly bool IsEmpty()
         {
             return Character == '\0';
         }
-        public override bool Equals(object? obj)
+        public override readonly bool Equals(object? obj)
         {
             return obj is not null && obj is ConsolePixel pixel && this == pixel;
         }
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return base.GetHashCode();
         }

@@ -148,9 +148,9 @@ namespace GameFrame.Core.Render
         }
         #endregion
 
-        public void Resize(int newWidth, int newHeight)
+        public void Resize(int newWidth, int newHeight, bool clear = true)
         {
-            Data = Map.GetNewSizeMap(Data, newWidth, newHeight);
+            Data = clear ? new ConsolePixel[newWidth, newHeight] : Map.GetNewSizeMap(Data, newWidth, newHeight);
             Width = newWidth;
             Height = newHeight;
         }
