@@ -1,7 +1,6 @@
 ﻿using GameFrame.Core.Physics;
 using GameFrame.Core.Render;
 using System.Diagnostics.CodeAnalysis;
-using System.Xml.Linq;
 
 namespace GameFrame.Core
 {
@@ -210,7 +209,7 @@ namespace GameFrame.Core
             }
             return null;
         }
-        
+
         #endregion
     }
 }

@@ -19,3 +19,52 @@ Using this framework you can get:
 - Input system, captures console input and provides you with input entry.
 - UI system, supporting various common UI components (todo).
 - Animation system, supporting image sequence playback and animation state machine (todo).
+
+```mermaid
+classDiagram
+
+GameManager ..> IGame
+IGame o-- Scene
+Scene *-- GameObject
+Scene *-- Map
+Scene *-- PhysicsSystem
+Scene ..> Input
+
+GameObject *--Component
+
+Component <|-- Renderer
+Renderer ..> Map
+Component <|-- Camera 
+Camera ..> Map
+Camera ..> Screen
+
+Renderer <|-- CanvasRenderer
+CanvasRenderer *-- Canvas
+CanvasElement <|-- Canvas
+CanvasElement o-- CanvasElement
+IPostProcessPass <|.. CanvasElement
+Camera o.. IPostProcessPass 
+
+Component <|-- Collider
+Collider *-- IPrimitive
+PhysicsSystem o-- Collider
+Component <|-- Rigidbody
+PhysicsSystem o-- Rigidbody
+
+class GameManager{
+      +Run(IGame)
+}
+
+class IGame{
+	+GetScene(): Scene
+	+Init()
+	+Update()
+}
+
+class Scene{
+	+Map: Map
+	+PhysicsSystem: PhysicsSystem
+	+GameObjects: List~GameObject~
+	+Components: List~Component~[]
+}
+```
