@@ -1,8 +1,14 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace GameFrame.Core.Render
 {
-    public class Image
+    public enum ImagePivotMode
+    {
+        Center,
+        Custom
+    }
+
+    public class Image : ISizeable
     {
         /// <summary>
         /// 图片数据
@@ -22,10 +28,43 @@ namespace GameFrame.Core.Render
         /// 图片尺寸
         /// </summary>
         public Vector Size { get; set; } = Vector.Zero;
+
+        private ImagePivotMode _pivotMode = ImagePivotMode.Center;
+        /// <summary>
+        /// 锚点模式
+        /// </summary>
+        public ImagePivotMode PivotMode
+        {
+            get => _pivotMode;
+            set
+            {
+                if (_pivotMode != value)
+                {
+                    if (_pivotMode == ImagePivotMode.Center)
+                    {
+                        _pivot = new Vector(Width / 2, Height / 2);
+                    }
+
+                    _pivotMode = value;
+                }
+            }
+        }
+
+        public Vector _pivot;
         /// <summary>
         /// 图片锚点，默认为中心点
         /// </summary>
-        public Vector Pivot { get; set; }
+        public Vector Pivot
+        {
+            get => _pivot;
+            set
+            {
+                if (PivotMode == ImagePivotMode.Custom)
+                {
+                    _pivot = value;
+                }
+            }
+        }
         #endregion
 
         #region 数据访问
@@ -45,7 +84,9 @@ namespace GameFrame.Core.Render
                 }
             }
         }
-
+        /// <summary>
+        /// 图片坐标索引
+        /// </summary>
         public IEnumerable<(int i, int j)> IndexEnumerator
         {
             get
@@ -88,10 +129,8 @@ namespace GameFrame.Core.Render
         public Image() : this(0, 0) { }
         public Image(int width, int height)
         {
-            Width = width;
-            Height = height;
-            Pivot = new Vector(Width / 2, Height / 2);
-            Data = new ConsolePixel[Width, Height];
+            Data = new ConsolePixel[0, 0];
+            Resize(width, height);
         }
         public Image(ConsolePixel[,] data)
         {
@@ -148,11 +187,66 @@ namespace GameFrame.Core.Render
         }
         #endregion
 
+        /// <summary>
+        /// 调整图片尺寸
+        /// </summary>
+        /// <param name="newWidth"></param>
+        /// <param name="newHeight"></param>
+        /// <param name="clear"></param>
         public void Resize(int newWidth, int newHeight, bool clear = true)
         {
             Data = clear ? new ConsolePixel[newWidth, newHeight] : Map.GetNewSizeMap(Data, newWidth, newHeight);
             Width = newWidth;
             Height = newHeight;
+
+            if (PivotMode == ImagePivotMode.Center)
+            {
+                _pivot = new Vector(Width / 2, Height / 2);
+            }
+        }
+        /// <summary>
+        /// 将图片复制到指定图片上
+        /// </summary>
+        /// <param name="destImage"></param>
+        /// <param name="destX"></param>
+        /// <param name="destY"></param>
+        /// <param name="startX"></param>
+        /// <param name="startY"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public void CopyTo(Image destImage, int destX = 0, int destY = 0, int startX = 0, int startY = 0, int width = 0, int height = 0, bool ignoreEmpty = true)
+        {
+            if (width <= 0)
+            {
+                width = Width;
+            }
+            if (height <= 0)
+            {
+                height = Height;
+            }
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (Map.IsOutSide(destImage.Data, destX + i, destY + j) || Map.IsOutSide(Data, startX + i, startY + j) || (ignoreEmpty && this[startX + i, startY + j].IsEmpty()))
+                    {
+                        continue;
+                    }
+
+                    destImage[destX + i, destY + j] = this[startX + i, startY + j];
+                }
+            }
+        }
+        /// <summary>
+        /// 清空图片
+        /// </summary>
+        public void Clear()
+        {
+            foreach (var (i, j) in IndexEnumerator)
+            {
+                Data[i, j] = ConsolePixel.Empty;
+            }
         }
     }
 }

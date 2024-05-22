@@ -5,7 +5,7 @@ namespace GameFrame.Core.Render
     /// <summary>
     /// 虚拟屏幕，会自适应相机输出的渲染缓冲区大小
     /// </summary>
-    public class Screen
+    public class Screen : ISizeable
     {
         #region 控制台窗口尺寸
         /// <summary>

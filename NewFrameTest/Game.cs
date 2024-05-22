@@ -52,7 +52,12 @@ namespace FrameTest
                     //camera!.AutoAdjustConsoleWindow = false;
                     //camera!.Width = 42;
                     //camera!.Height = 21;
-                    var canvas = new GameObject(scene, "Canvas").AddComponet<Canvas>();
+                    var canvas = new GameObject(scene, "Canvas").AddComponet<CanvasRenderer>().Canvas;
+                    canvas.AddElement(new TextElement
+                    {
+                        Position = new Vector(0, 0),
+                        Text = "Hello, I'm ChenGuanLin"
+                    });
 
                     return scene;
                 default:

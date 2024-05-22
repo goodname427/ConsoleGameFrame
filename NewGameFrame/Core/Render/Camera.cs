@@ -1,6 +1,6 @@
 ﻿namespace GameFrame.Core.Render
 {
-    public class Camera(GameObject gameObject) : Component(gameObject)
+    public class Camera(GameObject gameObject) : Component(gameObject), ISizeable
     {
         /// <summary>
         /// 相机宽度
@@ -24,7 +24,7 @@
         /// <summary>
         /// 后处理通道
         /// </summary>
-        public List<ICameraRenderPass> RenderPasses { get; } = [];
+        public List<IPostProcessPass> RenderPasses { get; } = [];
 
         private readonly Image _renderCache = new();
         /// <summary>
@@ -58,7 +58,7 @@
                 // 后处理，UI会在这里进行绘制
                 foreach (var renderPass in RenderPasses)
                 {
-                    renderPass.RenderPass(this, _renderCache);
+                    renderPass.PostProcess(_renderCache);
                 }
 
                 return _renderCache;

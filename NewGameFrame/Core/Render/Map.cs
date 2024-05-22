@@ -39,7 +39,6 @@
                 position.Y = Math.Abs(position.Y) - 1;
                 return 3;
             }
-
         }
         /// <summary>
         /// 获取新尺寸的地图
@@ -70,10 +69,20 @@
         /// <param name="quadrant"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public static bool IsOutSide(ConsolePixel[,] quadrant, Vector position)
+        public static bool IsOutSide(ConsolePixel[,] quadrant, int x, int y)
         {
             var (width, height) = (quadrant.GetLength(0), quadrant.GetLength(1));
-            return position.X >= width || position.Y >= height || position.X < 0 || position.Y < 0;
+            return x >= width || y >= height || x < 0 || y < 0;
+        }
+        /// <summary>
+        /// 判断位置是否越界
+        /// </summary>
+        /// <param name="quadrant"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public static bool IsOutSide(ConsolePixel[,] quadrant, Vector position)
+        {
+            return IsOutSide(quadrant, position.X, position.Y);
         }
 
         private readonly ConsolePixel[][,] _quadrant = [new ConsolePixel[0, 0], new ConsolePixel[0, 0], new ConsolePixel[0, 0], new ConsolePixel[0, 0]];
