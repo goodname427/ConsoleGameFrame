@@ -23,6 +23,12 @@ namespace GameFrame.UI
         /// UI的对齐方式
         /// </summary>
         public CanvasElementAlign Align { get; set; } = CanvasElementAlign.TopLeft;
+
+        /// <summary>
+        /// 父元素
+        /// </summary>
+        public CanvasElement? ParentElement { get; private set; } = null;
+
         private Vector _position;
         /// <summary>
         /// UI的位置
@@ -41,18 +47,63 @@ namespace GameFrame.UI
                 }
             }
         }
+        /// <summary>
+        /// 位置调整后调用
+        /// </summary>
+        protected virtual void OnPositionAdujusted() { }
 
-        protected readonly List<CanvasElement> _elements = [];
-        public void AddElement(CanvasElement element)
+        /// <summary>
+        /// 子元素
+        /// </summary>
+        protected List<CanvasElement> ChildElements = [];
+        /// <summary>
+        /// 添加Element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public virtual CanvasElement AddElement(CanvasElement element)
         {
-            _elements.Add(element);
+            CanvasElement? parent = this;
+            while (parent != null)
+            {
+                if (parent == element)
+                {
+                    return this;
+                }
+
+                parent = parent.ParentElement;
+            }
+
+            RemoveElement(element);
+
+            element.ParentElement = this;
+            ChildElements.Add(element);
+            return this;
         }
-        public void RemoveElement(CanvasElement element)
+        /// <summary>
+        /// 移除Element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public virtual CanvasElement RemoveElement(CanvasElement element)
         {
-            _elements.Remove(element);
+            if (element.ParentElement != this)
+            {
+                return this;
+            }
+
+            element.ParentElement = null;
+            ChildElements.Remove(element);
+            return this;
         }
 
-        public void Draw(Image renderCache)
+
+        /// <summary>
+        /// 绘制当前元素以及子元素
+        /// </summary>
+        /// <param name="renderCache"></param>
+        /// <param name="parentPostion"></param>
+        public virtual void Draw(Image renderCache, Vector parentPostion)
         {
             if (Align != CanvasElementAlign.Custom)
             {
@@ -68,17 +119,91 @@ namespace GameFrame.UI
                     CanvasElementAlign.Bottom => new(renderCache.Width / 2, 0),
                     CanvasElementAlign.Center => new(renderCache.Width / 2, renderCache.Height / 2),
                     _ => new()
-                };
+                } + parentPostion;
             }
+
+            OnPositionAdujusted();
 
             PostProcess(renderCache);
 
-            foreach (var element in _elements)
+            foreach (var element in ChildElements)
             {
-                element.Draw(renderCache);
+                element.Draw(renderCache, Position);
             }
         }
-
+        /// <summary>
+        /// 处理自身的绘制
+        /// </summary>
+        /// <param name="renderCache"></param>
         public abstract void PostProcess(Image renderCache);
+
+
+        #region UI交互
+        public bool IsSelected { get; set; } = false;
+
+        /// <summary>
+        /// 选中元素
+        /// </summary>
+        public virtual void Select()
+        {
+            if (IsSelected)
+            {
+                return;
+            }
+
+            // 先选中所有祖先元素
+            var acescents = new Stack<CanvasElement>();
+            CanvasElement? parent = ParentElement;
+            while (parent != null && !parent.IsSelected)
+            {
+                acescents.Push(parent);
+                parent = parent?.ParentElement;
+            }
+
+            while (acescents.Count > 0)
+            {
+                acescents.Pop().Select();
+
+            }
+
+            IsSelected = true;
+            OnSelected();
+        }
+        /// <summary>
+        /// 取消选中元素
+        /// </summary>
+        public virtual void Unselect()
+        {
+            if (!IsSelected)
+            {
+                return;
+            }
+
+            IsSelected = false;
+            OnUnselected();
+            
+            // 取消选中所有子元素
+            foreach (var child in ChildElements)
+            {
+                child.Unselect();
+            }
+        }
+        /// <summary>
+        /// 元素被选中时调用
+        /// </summary>
+        protected virtual void OnSelected() { }
+        /// <summary>
+        /// 元素在选中状态下会一直调用
+        /// </summary>
+        protected virtual void OnSelecting() { }
+        /// <summary>
+        /// 元素被取消选中时调用
+        /// </summary>
+        protected virtual void OnUnselected() { }
+        /// <summary>
+        /// 元素确认时调用
+        /// </summary>
+        protected virtual void OnConfirm() { }
+        #endregion
     }
 }

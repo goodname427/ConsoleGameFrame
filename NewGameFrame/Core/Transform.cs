@@ -3,42 +3,47 @@
     /// <summary>
     /// 代表游戏物体的transform信息
     /// </summary>
-    public class Transform(Vector Position) : Object
+    public class Transform(Vector position) : Object
     {
         private Transform? _parent;
         /// <summary>
         /// 游戏物体的父物体
         /// </summary>
-        public Transform? Parent
+        public virtual Transform? Parent
         {
             get => _parent;
             set
             {
-                if (_parent?.Parent == this)
+                Transform? parent = value;
+                while (parent != null)
                 {
-                    return;
+                    if (parent == this)
+                    {
+                        return;
+                    }
+                    parent = parent.Parent;
                 }
 
                 if (_parent != value)
                 {
-                    _parent?._child.Remove(this);
-                    value?._child.Add(this);
+                    _parent?._children.Remove(this);
+                    value?._children.Add(this);
                     _parent = value;
                 }
             }
         }
 
-        private readonly List<Transform> _child = [];
+        protected readonly List<Transform> _children = [];
         /// <summary>
         /// 游戏物体的孩子物体
         /// </summary>
-        public Transform[] Children => [.. _child];
+        public Transform[] Children => [.. _children];
 
-        private Vector _position = Position;
+        protected Vector _position = position;
         /// <summary>
         /// 游戏物体的位置
         /// </summary>
-        public Vector Position
+        public virtual Vector Position
         {
             get => _position;
             set

@@ -47,17 +47,24 @@ namespace FrameTest
                     p.AddComponet<Movement>();
                     //p.AddComponet<CustomCollider>().SetColliderToImage().ColliderEnter += (other) => Screen.Instance!.HUD = ($"{p.Name} interact with {other.Name}");
 
+                    // Camera
                     var camera = scene.FindComponentByType<Camera>();
                     camera!.GameObject.Transform.Parent = p.Transform;
-                    //camera!.AutoAdjustConsoleWindow = false;
-                    //camera!.Width = 42;
-                    //camera!.Height = 21;
+                    camera!.RenderPasses.Add(new FilterPostProcessPass());
+                    
+                    // UI
                     var canvas = new GameObject(scene, "Canvas").AddComponet<CanvasRenderer>().Canvas;
-                    canvas.AddElement(new TextElement
-                    {
-                        Position = new Vector(0, 0),
-                        Text = "Hello, I'm ChenGuanLin"
-                    });
+                    //canvas.AddElement(new TextElement
+                    //{
+                    //    Position = new Vector(0, 0),
+                    //    Text = "Hello, I'm ChenGuanLin"
+                    //});
+                    canvas.AddElement(
+                        new GridGroupElement()
+                        .AddElement(new TextElement { Text = "1.我是人" })
+                        .AddElement(new TextElement { Text = "2.奥特曼是人变得" })
+                        .AddElement(new TextElement { Text = "3.我是奥特曼" })
+                    );
 
                     return scene;
                 default:
