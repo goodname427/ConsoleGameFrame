@@ -28,5 +28,17 @@ namespace GameFrame.UI
                 renderCache[Position.X + i, Position.Y] = new(Text[i], Color, BackColor);
             }
         }
+
+        private ConsoleColor _preBackColor = ConsoleColor.White;
+        protected override void OnSelected()
+        {
+            _preBackColor = BackColor;
+            BackColor = ConsoleColor.Green;
+        }
+
+        protected override void OnUnselected()
+        {
+            BackColor = _preBackColor;
+        }
     }
 }

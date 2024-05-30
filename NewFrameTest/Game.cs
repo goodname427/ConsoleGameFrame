@@ -12,10 +12,24 @@ namespace FrameTest
     {
         public override Scene? GetScene(int sceneIndex)
         {
+            Scene? scene;
             switch (sceneIndex)
             {
                 case 0:
-                    var scene = SceneUtils.CreatDefaultScene();
+                    scene = SceneUtils.CreatDefaultScene();
+                    var canvas = new GameObject(scene, "Canvas").AddComponet<CanvasRenderer>().Canvas;
+
+                    optionGroup = new OptionGroupElement("Hello World");
+                    optionGroup
+                        .AddOption(new("Start", (op) => Step = 1))
+                        .AddOption(new("Option", (op) => Screen.Main!.HUD = "Game Option"))
+                        .AddOption(new("Exit", (op) => Step = -1));
+
+                    canvas.AddElement(optionGroup);
+                    optionGroup.Choose();
+                    return scene;
+                case 1:
+                    scene = SceneUtils.CreatDefaultScene();
 
                     // 背景
                     var backImage = Image.Read(@"C:\Users\galenglchen\Desktop\test.txt") ?? new Image();
@@ -27,19 +41,19 @@ namespace FrameTest
                     // 墙
                     //var wall = new GameObject(scene, "Wall", new(new(3, 5)));
                     //wall.AddComponet<ImageRenderer>().Image = new('%', 10, 1);
-                    //wall.AddComponet<BoxCollider>().SetBoxToImage();
+                    //wall.AddComponet<BoxCollider>().SetColliderToImage();
 
                     // 玩家
-                    var p = new GameObject(scene, "Player", new(new(0, 0, 1)));
+                    var p = new GameObject(scene, "Player", new(new(0, 0)));
 
                     var pImgae =
                         new Image('P');
-                        //new Image(new ConsolePixel[,]
-                        //{
-                        //    { '#', '\0', '#', '\0' },
-                        //    { '\0', '#', '#' , '#'},
-                        //    { '#', '\0', '#' , '\0'},
-                        //});
+                    //new Image(new ConsolePixel[,]
+                    //{
+                    //    { '#', '\0', '#', '\0' },
+                    //    { '\0', '#', '#' , '#'},
+                    //    { '#', '\0', '#' , '\0'},
+                    //});
 
                     pImgae.IndexEnumerator.Foreach(pos => pImgae[pos] = pImgae[pos] with { Color = ConsoleColor.Yellow });
                     p.AddComponet<Player>();
@@ -50,27 +64,41 @@ namespace FrameTest
                     // Camera
                     var camera = scene.FindComponentByType<Camera>();
                     camera!.GameObject.Transform.Parent = p.Transform;
-                    camera!.RenderPasses.Add(new FilterPostProcessPass());
-                    
+                    //camera!.RenderPasses.Add(new FilterPostProcessPass());
+
                     // UI
-                    var canvas = new GameObject(scene, "Canvas").AddComponet<CanvasRenderer>().Canvas;
+                   
                     //canvas.AddElement(new TextElement
                     //{
                     //    Position = new Vector(0, 0),
                     //    Text = "Hello, I'm ChenGuanLin"
                     //});
-                    canvas.AddElement(
-                        new GridGroupElement()
-                        .AddElement(new TextElement { Text = "1.我是人" })
-                        .AddElement(new TextElement { Text = "2.奥特曼是人变得" })
-                        .AddElement(new TextElement { Text = "3.我是奥特曼" })
-                    );
+
+                    //var grid = new GridGroupElement();
+
+                    //grid
+                    //.AddElement(new TextElement { Text = "Please Select Your Favorite Food!" })
+                    //.AddElement(new TextElement { Text = "1.Cola" })
+                    //.AddElement(new TextElement { Text = "2.Instant noodles" })
+                    //.AddElement(new TextElement { Text = "3.Crisps" })
+                    //.AddElement(new TextElement { Text = "4.Shit" })
+                    //;
+
+                    //grid.GridSpacing = new Vector(50, -1);
+                    //grid.MaxGridCount = 1;
+                    //canvas.AddElement(grid);
+
+                   
+
+                    //optionGroup.Choose();
 
                     return scene;
                 default:
                     return null;
             }
         }
+
+        OptionGroupElement? optionGroup;
 
         public override void Init()
         {
@@ -97,7 +125,12 @@ namespace FrameTest
                 Step = -1;
             }
 
-            Screen.Main!.HUD = Time.DeltaTime.ToString() + "           ";
+            if (Input.GetKey(ConsoleKey.T))
+            {
+                optionGroup?.Choose();
+            }
+
+            //Screen.Main!.HUD = Time.DeltaTime.ToString() + "           ";
         }
     }
 }

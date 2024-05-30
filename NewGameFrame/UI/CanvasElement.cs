@@ -19,6 +19,12 @@ namespace GameFrame.UI
 
     public abstract class CanvasElement : IPostProcessPass
     {
+        public event Action? Selected;
+        public event Action? UnSelected;
+        public event Action? Selecting;
+        public event Action? Confirmed;
+
+        #region UI位置
         /// <summary>
         /// UI的对齐方式
         /// </summary>
@@ -48,14 +54,28 @@ namespace GameFrame.UI
             }
         }
         /// <summary>
+        /// UI的位置偏移
+        /// </summary>
+        public Vector PositionOffset { get; set; }
+        /// <summary>
         /// 位置调整后调用
         /// </summary>
         protected virtual void OnPositionAdujusted() { }
+        #endregion
 
+        #region UI渲染
         /// <summary>
         /// 子元素
         /// </summary>
         protected List<CanvasElement> ChildElements = [];
+        /// <summary>
+        /// 用于遍历所有子元素
+        /// </summary>
+        public IEnumerable<CanvasElement> Children => ChildElements;
+        /// <summary>
+        /// 子元素数量
+        /// </summary>
+        public int ChildCount => ChildElements.Count;
         /// <summary>
         /// 添加Element
         /// </summary>
@@ -63,6 +83,12 @@ namespace GameFrame.UI
         /// <returns></returns>
         public virtual CanvasElement AddElement(CanvasElement element)
         {
+            if (element.ParentElement == this)
+            {
+                return this;
+            }
+
+            // 避免成环
             CanvasElement? parent = this;
             while (parent != null)
             {
@@ -74,7 +100,7 @@ namespace GameFrame.UI
                 parent = parent.ParentElement;
             }
 
-            RemoveElement(element);
+            element.ParentElement?.RemoveElement(element);
 
             element.ParentElement = this;
             ChildElements.Add(element);
@@ -105,6 +131,7 @@ namespace GameFrame.UI
         /// <param name="parentPostion"></param>
         public virtual void Draw(Image renderCache, Vector parentPostion)
         {
+            // 调整位置
             if (Align != CanvasElementAlign.Custom)
             {
                 _position = Align switch
@@ -119,7 +146,7 @@ namespace GameFrame.UI
                     CanvasElementAlign.Bottom => new(renderCache.Width / 2, 0),
                     CanvasElementAlign.Center => new(renderCache.Width / 2, renderCache.Height / 2),
                     _ => new()
-                } + parentPostion;
+                } + parentPostion + PositionOffset;
             }
 
             OnPositionAdujusted();
@@ -136,17 +163,24 @@ namespace GameFrame.UI
         /// </summary>
         /// <param name="renderCache"></param>
         public abstract void PostProcess(Image renderCache);
-
+        #endregion
 
         #region UI交互
-        public bool IsSelected { get; set; } = false;
+        /// <summary>
+        /// UI是否能被选中
+        /// </summary>
+        public bool Selectable { get; set; } = true;
+        /// <summary>
+        /// UI是否被选中
+        /// </summary>
+        public bool IsSelected { get; private set; } = false;
 
         /// <summary>
         /// 选中元素
         /// </summary>
-        public virtual void Select()
+        public void Select()
         {
-            if (IsSelected)
+            if (IsSelected || !Selectable)
             {
                 return;
             }
@@ -168,11 +202,12 @@ namespace GameFrame.UI
 
             IsSelected = true;
             OnSelected();
+            Selected?.Invoke();
         }
         /// <summary>
         /// 取消选中元素
         /// </summary>
-        public virtual void Unselect()
+        public void Unselect()
         {
             if (!IsSelected)
             {
@@ -181,6 +216,7 @@ namespace GameFrame.UI
 
             IsSelected = false;
             OnUnselected();
+            UnSelected?.Invoke();
             
             // 取消选中所有子元素
             foreach (var child in ChildElements)
@@ -195,15 +231,24 @@ namespace GameFrame.UI
         /// <summary>
         /// 元素在选中状态下会一直调用
         /// </summary>
-        protected virtual void OnSelecting() { }
+        public virtual void OnSelecting() { }
         /// <summary>
         /// 元素被取消选中时调用
         /// </summary>
         protected virtual void OnUnselected() { }
+
+        /// <summary>
+        /// 确定
+        /// </summary>
+        public void Confirm()
+        {
+            OnConfirmed();
+            Confirmed?.Invoke();
+        }
         /// <summary>
         /// 元素确认时调用
         /// </summary>
-        protected virtual void OnConfirm() { }
+        protected virtual void OnConfirmed() { }
         #endregion
     }
 }

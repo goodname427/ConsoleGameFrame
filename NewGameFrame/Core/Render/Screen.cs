@@ -286,9 +286,9 @@ namespace GameFrame.Core.Render
             // 绘制HUD
             if (SetCursorPosition(0, CursorHoldPosition.Y))
             {
-                //Console.ForegroundColor = ConsoleColor.Black;
-                //Console.BackgroundColor = ConsoleColor.White;
-                //Console.WriteLine(HUD);
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.WriteLine(HUD);
             }
         }
     }

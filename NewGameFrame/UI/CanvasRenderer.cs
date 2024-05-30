@@ -33,24 +33,15 @@ namespace GameFrame.UI
                 _overrideMode = value;
                 if (_overrideMode != CanvasOverrideMode.Camera)
                 {
-                    OverridenCamera?.RenderPasses.Remove(Canvas);
+                    _overridenCamera?.RenderPasses.Remove(Canvas);
+                    _overridenCamera = null;
                 }
                 else
                 {
-                    OverridenCamera ??= OwnerScene.FindComponentByType<Camera>();
-                    if (OverridenCamera is not null)
-                        OverrideCamera(OverridenCamera);
+                    _overridenCamera ??= OwnerScene.FindComponentByType<Camera>();
+                    _overridenCamera?.RenderPasses.Add(Canvas);
                 }
             }
-        }
-
-        /// <summary>
-        /// 覆盖相机
-        /// </summary>
-        /// <param name="camera"></param>
-        private void OverrideCamera(Camera camera)
-        {
-            camera.RenderPasses.Add(Canvas);
         }
 
         private Camera? _overridenCamera = null;
@@ -62,13 +53,10 @@ namespace GameFrame.UI
             get => _overridenCamera;
             set
             {
-                if (_overridenCamera != value && _overrideMode != CanvasOverrideMode.Camera)
+                if (_overridenCamera != value && _overrideMode == CanvasOverrideMode.Camera)
                 {
                     _overridenCamera?.RenderPasses.Remove(Canvas);
-                    if (value is not null)
-                    {
-                        OverrideCamera(value);
-                    }
+                    value?.RenderPasses.Add(Canvas);
                 }
                 _overridenCamera = value;
             }
@@ -125,19 +113,43 @@ namespace GameFrame.UI
 
         public override void Render()
         {
-            if (OverrideMode != CanvasOverrideMode.Scene) 
+            if (OverrideMode != CanvasOverrideMode.Scene)
             {
                 return;
             }
 
             if (_renderCache.Width != Width || _renderCache.Height != Height)
             {
-                _renderCache.Resize(Width, Height);  
+                _renderCache.Resize(Width, Height);
             }
 
             Canvas.PostProcess(_renderCache);
 
             DrawImageOnMap(_renderCache);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (Canvas.IsSelected)
+            {
+                Stack<CanvasElement> stack = new();
+                stack.Push(Canvas);
+                while (stack.Count > 0)
+                {
+                    var top = stack.Pop();
+                    top.OnSelecting();
+
+                    foreach (var child in top.Children)
+                    {
+                        if (child.IsSelected)
+                        {
+                            stack.Push(child);
+                        }
+                    }
+                }
+            }
         }
     }
 }

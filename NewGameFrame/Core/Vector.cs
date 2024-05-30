@@ -1,24 +1,19 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Xml.Schema;
-
-namespace GameFrame.Core
+﻿namespace GameFrame.Core
 {
-    public struct Vector(int x = 0, int y = 0, int z = 0)
+    public struct Vector(int x = 0, int y = 0)
     {
         #region 预设
         public static Vector Zero => new();
-        public static Vector Up => new(0, 1, 0);
-        public static Vector Down => new(0, -1, 0);
-        public static Vector Left => new(-1, 0, 0);
-        public static Vector Right => new(1, 0, 0);
-        public static Vector Forward => new(0, 0, 1);
-        public static Vector Back => new(0, 0, -1);
+        public static Vector Up => new(0, 1);
+        public static Vector Down => new(0, -1);
+        public static Vector Left => new(-1, 0);
+        public static Vector Right => new(1, 0);
         #endregion
 
         #region 运算符
         public static Vector operator +(Vector left, Vector right)
         {
-            return new Vector(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+            return new Vector(left.X + right.X, left.Y + right.Y);
         }
         public static Vector operator -(Vector vector)
         {
@@ -42,7 +37,7 @@ namespace GameFrame.Core
         }
         public static bool operator ==(Vector left, Vector right)
         {
-            return left.X == right.X && left.Y == right.Y && left.Z == right.Z;
+            return left.X == right.X && left.Y == right.Y;
         }
         public static bool operator !=(Vector left, Vector right)
         {
@@ -53,26 +48,21 @@ namespace GameFrame.Core
         {
             return new Vector(tuple.Item1, tuple.Item2);
         }
-        public static implicit operator Vector((int, int, int) tuple)
-        {
-            return new Vector(tuple.Item1, tuple.Item2, tuple.Item3);
-        }
         #endregion
 
         #region 数据
         public int X { get; set; } = x;
         public int Y { get; set; } = y;
-        public int Z { get; set; } = z;
         public readonly Vector Abs => Operate(Math.Abs);
 
         public readonly float Length => MathF.Sqrt(SqureLength);
-        public readonly float SqureLength => X * X + Y * Y + Z * Z;
+        public readonly float SqureLength => X * X + Y * Y;
         #endregion
 
         #region 函数
         public readonly Vector Operate(Func<int, int> operate)
         {
-            return new(operate(X), operate(Y), operate(Z));
+            return new(operate(X), operate(Y));
         }
         public override readonly string ToString()
         {
@@ -82,12 +72,11 @@ namespace GameFrame.Core
         {
             return obj is Vector otherVector
                 && otherVector.X == X
-                && otherVector.Y == Y
-                && otherVector.Z == Z;
+                && otherVector.Y == Y;
         }
         public override readonly int GetHashCode()
         {
-            return HashCode.Combine(X, Y, Z);
+            return HashCode.Combine(X, Y);
         }
         #endregion
     }
