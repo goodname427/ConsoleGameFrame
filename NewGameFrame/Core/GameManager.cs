@@ -64,7 +64,7 @@ namespace GameFrame.Core
             Console.ForegroundColor = ConsoleColor.Red;
             Console.CursorLeft = 0;
             Console.CursorTop = Console.WindowHeight - 2;
-            Console.WriteLine("_Game Over! Press Any Key To Exit....");
+            Console.WriteLine("Game Over! Press Any Key To Exit....");
             Console.ReadKey();
         }
     }
