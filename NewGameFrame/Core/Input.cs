@@ -21,13 +21,13 @@
         /// <summary>
         /// 检测是否有任何键按下
         /// </summary>
-        public static bool AnyKey => _currentInputs.Count > 0;
+        public static bool AnyKey => s_currentInputs.Count > 0;
 
-        private static readonly List<ConsoleKey> _currentInputs = [];
+        private static readonly List<ConsoleKey> s_currentInputs = [];
         /// <summary>
         /// 当前输入
         /// </summary>
-        public static IEnumerable<ConsoleKey> CurrentInputs => _currentInputs;
+        public static IEnumerable<ConsoleKey> CurrentInputs => s_currentInputs;
 
         /// <summary>
         /// 获取输入
@@ -35,10 +35,10 @@
         /// <returns></returns>
         public static void GetInput()
         {
-            _currentInputs.Clear();
+            s_currentInputs.Clear();
             while (Console.KeyAvailable)
             {
-                _currentInputs.Add(Console.ReadKey().Key);
+                s_currentInputs.Add(Console.ReadKey().Key);
             }
         }
         /// <summary>
@@ -48,7 +48,7 @@
         /// <returns></returns>
         public static bool GetKey(ConsoleKey key)
         {
-            return _currentInputs.Contains(key);
+            return s_currentInputs.Contains(key);
         }
         /// <summary>
         /// 判断是否输入指定按钮
