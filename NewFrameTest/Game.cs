@@ -32,7 +32,7 @@ namespace FrameTest
                     scene = SceneUtils.CreatDefaultScene();
 
                     // 背景
-                    var backImage = Image.Read(@"C:\Users\galenglchen\Desktop\test.txt") ?? new Image();
+                    var backImage = Image.Read(@"D:\Users\30595\Desktop\test.txt") ?? new Image();
 
                     var background = new GameObject(scene, transform: new(new(0, 0)));
                     background.AddComponet<ImageRenderer>().Image = backImage;

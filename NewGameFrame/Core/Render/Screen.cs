@@ -74,7 +74,20 @@ namespace GameFrame.Core.Render
         /// <summary>
         /// 光标停靠位置
         /// </summary>
-        public Vector CursorHoldPosition => new(0, Math.Clamp(Height - 2, 0, ConsoleWindowHeight - 2));
+        public Vector CursorHoldPosition
+        {
+            get
+            {
+                if (ConsoleWindowHeight > 2)
+                {
+                    return new(0, Math.Clamp(Height - 2, 0, ConsoleWindowHeight - 2));
+                }
+                else
+                {
+                    return new(0, 0);
+                }
+            }
+        }
         #endregion
 
         /// <summary>
@@ -209,7 +222,7 @@ namespace GameFrame.Core.Render
                 }
                 return;
             }
-            
+
             var builder = new StringBuilder();
             var color = ConsoleColor.White;
             var backColor = ConsoleColor.Black;
